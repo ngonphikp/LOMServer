@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="GameExtension">
+    <output-path>$USER_HOME$/SmartFoxServer_2X/SFS2X/extensions/LOM</output-path>
+    <root id="archive" name="GameExtension.jar">
+      <element id="module-output" name="LOMServer" />
+    </root>
+  </artifact>
+</component>
