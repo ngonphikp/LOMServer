@@ -26,40 +26,8 @@ public class HandlerZone extends BaseHandler {
                 break;
             case USER_DISCONNECT:
                 OnUserDisconnect(event);
-            case USER_LOGIN:
-                OnUserLogin(event);
-                break;
-            case USER_LOGOUT:
-                OnUserLogout(event);
                 break;
         }
-    }
-
-    private void OnUserLogin(ISFSEvent event) {
-        trace("____________________________ OnUserLogin ____________________________");
-        ISFSObject dataRec = (ISFSObject) event.getParameter(SFSEventParam.LOGIN_IN_DATA);
-
-        int cmdId = dataRec.getInt(CmdDefine.CMD_ID);
-        switch (cmdId){
-            case CmdDefine.CMD.LOGIN:
-                HandleLogin(event);
-                break;
-            case CmdDefine.CMD.REGISTER:
-                HandleRegister(event);
-                break;
-        }
-    }
-
-    private void HandleRegister(ISFSEvent event) {
-
-    }
-
-    private void HandleLogin(ISFSEvent event) {
-
-    }
-
-    private void OnUserLogout(ISFSEvent event) {
-        trace("____________________________ OnUserLogout ____________________________");
     }
 
     public void OnUserJoinZone(ISFSEvent event){
@@ -79,8 +47,5 @@ public class HandlerZone extends BaseHandler {
     protected void initHandlerServerEvent() {
         this.extension.addEventHandler(SFSEventType.USER_JOIN_ZONE, this);
         this.extension.addEventHandler(SFSEventType.USER_DISCONNECT, this);
-
-        this.extension.addEventHandler(SFSEventType.USER_LOGIN, this);
-        this.extension.addEventHandler(SFSEventType.USER_LOGOUT, this);
     }
 }

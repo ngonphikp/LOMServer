@@ -17,6 +17,10 @@ public class CmdDefine {
         public static final int OUTGUILD = 1012;
     }
 
+    public static class ErrorCode{
+        public static final short SUCCESS = 0;
+    }
+
     public static class Module{
         public static final String MODULE_USER = "user";
         public static final String MODULE_CHARACTER = "character";

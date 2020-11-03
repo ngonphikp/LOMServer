@@ -2,7 +2,10 @@ import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
+import com.smartfoxserver.v2.exceptions.IErrorCode;
+import com.smartfoxserver.v2.exceptions.SFSErrorData;
 import com.smartfoxserver.v2.exceptions.SFSException;
+import com.smartfoxserver.v2.exceptions.SFSLoginException;
 import com.smartfoxserver.v2.extensions.BaseClientRequestHandler;
 import com.smartfoxserver.v2.extensions.IServerEventHandler;
 
@@ -31,7 +34,11 @@ public abstract class BaseHandler extends BaseClientRequestHandler implements IS
     @Override
     public final void handleServerEvent(ISFSEvent isfsEvent) throws SFSException {
         SFSEventType type = isfsEvent.getType();
-        HandleServerEvent(type, isfsEvent);
+        try{
+            HandleServerEvent(type, isfsEvent);
+        }catch (Exception e){
+            throw e;
+        }
     }
 
     protected abstract void HandleServerEvent(SFSEventType type, ISFSEvent event) throws SFSException;
@@ -39,4 +46,11 @@ public abstract class BaseHandler extends BaseClientRequestHandler implements IS
     protected abstract void initHandlerClientRequest();
 
     protected abstract void initHandlerServerEvent();
+
+    public void throwLoginExcepsion(IErrorCode iErrorCode, String param, String messageServer) throws SFSException {
+        SFSErrorData errorData = new SFSErrorData(iErrorCode);
+        errorData.addParameter(param);
+
+        throw new SFSLoginException(messageServer, errorData);
+    }
 }

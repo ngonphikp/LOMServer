@@ -5,7 +5,6 @@ public class HandleExtension extends BaseExtension {
     public void init() {
         trace("____________________________ HandleExtension ____________________________");
         super.init();
-        this.addEventHandler(SFSEventType.SERVER_READY, OnServerReadyHandler.class);
     }
 
     @Override
@@ -13,8 +12,5 @@ public class HandleExtension extends BaseExtension {
         new HandlerZone(this);
         new HandlerLogin(this);
         new HandlerUser(this);
-    }
-
-    private class OnServerReadyHandler {
     }
 }
