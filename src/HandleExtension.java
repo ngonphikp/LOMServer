@@ -1,6 +1,7 @@
-import com.smartfoxserver.v2.core.SFSEventType;
+import Base.BaseExtension;
 
 public class HandleExtension extends BaseExtension {
+
     @java.lang.Override
     public void init() {
         trace("____________________________ HandleExtension ____________________________");

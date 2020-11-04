@@ -1,3 +1,5 @@
+package Base;
+
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.extensions.IClientRequestHandler;
 import com.smartfoxserver.v2.extensions.IServerEventHandler;
@@ -41,14 +43,14 @@ public abstract class BaseExtension extends SFSExtension {
         handlers.put(handlerType, handler);
     }
 
-    //Xoa event handler voi handlerType trong map (key: handlerType -> value: handler)
-    public final void removeServerHandler(String handlerType) {
-        if (handlers.containsKey(handlerType))
-            handlers.remove(handlerType);
-    }
-
-    //Lay event handler voi handlerTyle trong map (key: handlerType -> value: handler)
-    public final IServerEventHandler getServerHandler(String handlerType) {
-        return handlers.get(handlerType);
-    }
+//    //Xoa event handler voi handlerType trong map (key: handlerType -> value: handler)
+//    public final void removeServerHandler(String handlerType) {
+//        if (handlers.containsKey(handlerType))
+//            handlers.remove(handlerType);
+//    }
+//
+//    //Lay event handler voi handlerTyle trong map (key: handlerType -> value: handler)
+//    public final IServerEventHandler getServerHandler(String handlerType) {
+//        return handlers.get(handlerType);
+//    }
 }

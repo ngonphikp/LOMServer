@@ -1,9 +1,9 @@
+import Base.BaseExtension;
+import Base.BaseHandler;
 import com.smartfoxserver.v2.core.ISFSEvent;
-import com.smartfoxserver.v2.core.SFSEventParam;
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
-import com.smartfoxserver.v2.exceptions.SFSException;
 
 public class HandlerZone extends BaseHandler {
 
@@ -19,7 +19,7 @@ public class HandlerZone extends BaseHandler {
     }
 
     @Override
-    protected void HandleServerEvent(SFSEventType type, ISFSEvent event) throws SFSException {
+    protected void HandleServerEvent(SFSEventType type, ISFSEvent event) {
         switch (type) {
             case USER_JOIN_ZONE:
                 OnUserJoinZone(event);

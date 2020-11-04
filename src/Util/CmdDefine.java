@@ -1,3 +1,5 @@
+package Util;
+
 public class CmdDefine {
     public static final String CMD_ID = "cmdid";
     public static final String ERROR_CODE = "ec";
@@ -19,12 +21,14 @@ public class CmdDefine {
 
     public static class ErrorCode{
         public static final short SUCCESS = 0;
+        public static final short WRONG_USERNAME_OR_PASSWORD = 1;
+        public static final short EXIT_ACCOUNT = 2;
     }
 
     public static class Module{
         public static final String MODULE_USER = "user";
         public static final String MODULE_CHARACTER = "character";
-        public static final String MODULE_TICKMILESTONE = "tickmilestone";
+        public static final String MODULE_MILESTONE = "milestone";
         public static final String MODULE_GUILD = "guild";
     }
 
@@ -34,28 +38,28 @@ public class CmdDefine {
         public static final String PASSWORD = "password";
         public static final String NAME = "name";
 
-        public static final String TAI_KHOAN = "taikhoan";
-        public static final String LOGIN_OUT_DATA = "loginOutData";
+        public static final String ACCOUNT = "account";
+        public static final String LOGIN_OUT_DATA = "loginoutdata";
 
-        public static final String NHAN_VAT_S = "nhanvats";
+        public static final String CHARACTERS = "characters";
 
         public static final String TICK_MILESTONES = "tick_milestones";
 
         public static final String TYPE_TAVERN = "type_tavern";
-        public static final String NHAN_VAT = "nhanvat";
+        public static final String CHARACTER = "character";
     }
 
     public static class ModuleCharacter{
         public static final String ID_NV = "id_nv";
         public static final String ID_CFG = "id_cfg";
-        public static final String ID_TK = "id_tk";
+        public static final String ID_AC = "id_ac";
         public static final String LV = "lv";
         public static final String IDX = "idx";
     }
 
-    public static class ModuleTickMilestone{
+    public static class ModuleMilestone{
         public static final String ID_TML = "id_tml";
-        public static final String ID_TK = "id_tk";
+        public static final String ID_AC = "id_ac";
         public static final String ID_ML = "id_ml";
         public static final String STAR = "star";
 
