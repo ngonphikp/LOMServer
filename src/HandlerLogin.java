@@ -55,7 +55,8 @@ public class HandlerLogin extends BaseHandler {
         ISFSObject dataSend = (ISFSObject) event.getParameter(SFSEventParam.LOGIN_OUT_DATA);
         ISFSObject packet = new SFSObject();
 
-        //trace(dataRec.getDump());
+        // === Đọc dữ liệu gửi lên ===
+        trace(dataRec.getDump());
 
         // Lấy thông tin đăng nhập
         String username = dataRec.getUtfString(CmdDefine.ModuleUser.USERNAME);
@@ -67,6 +68,7 @@ public class HandlerLogin extends BaseHandler {
             trace("Tồn tại tài khoản");
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
+            // === Thao tác database ===
             // Lấy thông tin tài khoản
             M_Account account = new M_Account();
             account.id = 1;
@@ -74,7 +76,7 @@ public class HandlerLogin extends BaseHandler {
             account.password = password;
             account.name = "name";
 
-            // Tạo dữ liệu gửi xuống
+            // === Gửi dữ liệu xuống ===
             ISFSObject obj = new SFSObject();
             obj.putInt(CmdDefine.ModuleUser.ID, account.id);
             obj.putUtfString(CmdDefine.ModuleUser.USERNAME, account.username);
@@ -97,7 +99,8 @@ public class HandlerLogin extends BaseHandler {
         ISFSObject dataSend = (ISFSObject) event.getParameter(SFSEventParam.LOGIN_OUT_DATA);
         ISFSObject packet = new SFSObject();
 
-        //trace(dataRec.getDump());
+        // === Đọc dữ liệu gửi lên ===
+        trace(dataRec.getDump());
 
         // Lấy thông tin đăng ký
         String username = dataRec.getUtfString(CmdDefine.ModuleUser.USERNAME);
@@ -113,16 +116,17 @@ public class HandlerLogin extends BaseHandler {
             trace("Không tồn tại tài khoản");
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-            // Thêm tài khoản vào database
+            // === Thao tác database ===
+            // Thêm tài khoản
 
             // Lấy thông tin tài khoản
             M_Account account = new M_Account();
-            account.id = 1;
+            account.id = 2;
             account.username = username;
             account.password = password;
             account.name = "name";
 
-            // Tạo dữ liệu gửi xuống
+            // === Gửi dữ liệu xuống ===
             ISFSObject obj = new SFSObject();
             obj.putInt(CmdDefine.ModuleUser.ID, account.id);
             obj.putUtfString(CmdDefine.ModuleUser.USERNAME, account.username);
