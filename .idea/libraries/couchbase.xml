@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="couchbase">
+    <CLASSES>
+      <root url="file://$USER_HOME$/SmartFoxServer_2X_game/SFS2X/lib/couchbase" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$USER_HOME$/SmartFoxServer_2X_game/SFS2X/lib/couchbase" recursive="false" />
+  </library>
+</component>

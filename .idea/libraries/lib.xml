@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="file://$USER_HOME$/SmartFoxServer_2X_game/SFS2X/lib" />
+      <root url="file://$USER_HOME$/SmartFoxServer_2X_game/SFS2X/lib/jetty/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/SmartFoxServer_2X_game/SFS2X/lib/Lib" />
+      <root url="file://$USER_HOME$/SmartFoxServer_2X_game/SFS2X/lib/Lib/test" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/SmartFoxServer_2X_game/SFS2X/lib" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/SmartFoxServer_2X_game/SFS2X/lib/jetty/lib" recursive="false" />
+  </library>
+</component>

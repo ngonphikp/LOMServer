@@ -1,3 +1,5 @@
+package Handler;
+
 import Base.BaseExtension;
 import Base.BaseHandler;
 import com.smartfoxserver.v2.core.ISFSEvent;

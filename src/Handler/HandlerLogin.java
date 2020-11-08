@@ -1,5 +1,8 @@
+package Handler;
+
 import Base.BaseExtension;
 import Base.BaseHandler;
+import Controls.C_Account;
 import Models.M_Account;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
@@ -10,7 +13,6 @@ import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 
 public class HandlerLogin extends BaseHandler {
-
 
     public HandlerLogin(BaseExtension extension) {
         super(extension);
@@ -59,39 +61,26 @@ public class HandlerLogin extends BaseHandler {
         trace(dataRec.getDump());
 
         // Lấy thông tin đăng nhập
-        String username = dataRec.getUtfString(CmdDefine.ModuleUser.USERNAME);
-        String password = dataRec.getUtfString(CmdDefine.ModuleUser.PASSWORD);
+        String username = dataRec.getUtfString(CmdDefine.ModuleAccount.USERNAME);
+        String password = dataRec.getUtfString(CmdDefine.ModuleAccount.PASSWORD);
         trace("Đăng nhập: " + username + " / " + password);
 
-        // Kiểm tra tên đăng nhập và mật khẩu
-        if(username.equals("admin") && password.equals("123456")){
+        // === Thao tác database ===
+        // Lấy thông tin tài khoản theo tên đăng nhập và mật khẩu
+        M_Account account = C_Account.get(username, password);
+        if(account != null){
             trace("Tồn tại tài khoản");
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
-
-            // === Thao tác database ===
-            // Lấy thông tin tài khoản
-            M_Account account = new M_Account();
-            account.id = 1;
-            account.username = username;
-            account.password = password;
-            account.name = "name";
-
-            // === Gửi dữ liệu xuống ===
-            ISFSObject obj = new SFSObject();
-            obj.putInt(CmdDefine.ModuleUser.ID, account.id);
-            obj.putUtfString(CmdDefine.ModuleUser.USERNAME, account.username);
-            obj.putUtfString(CmdDefine.ModuleUser.PASSWORD, account.password);
-            obj.putUtfString(CmdDefine.ModuleUser.NAME, account.name);
-
-            packet.putSFSObject(CmdDefine.ModuleUser.ACCOUNT, obj);
+            packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
         }
         else {
             trace("Không tồn tại tài khoản");
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.WRONG_USERNAME_OR_PASSWORD);
         }
 
+        // === Gửi dữ liệu xuống ===
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.LOGIN);
-        dataSend.putSFSObject(CmdDefine.ModuleUser.LOGIN_OUT_DATA, packet);
+        dataSend.putSFSObject(CmdDefine.ModuleAccount.LOGIN_OUT_DATA, packet);
     }
 
     private void HandleRegister(ISFSEvent event) {
@@ -103,12 +92,12 @@ public class HandlerLogin extends BaseHandler {
         trace(dataRec.getDump());
 
         // Lấy thông tin đăng ký
-        String username = dataRec.getUtfString(CmdDefine.ModuleUser.USERNAME);
-        String password = dataRec.getUtfString(CmdDefine.ModuleUser.PASSWORD);
+        String username = dataRec.getUtfString(CmdDefine.ModuleAccount.USERNAME);
+        String password = dataRec.getUtfString(CmdDefine.ModuleAccount.PASSWORD);
         trace("Đăng ký: " + username + " / " + password);
 
-        // Kiểm tra tên đăng nhập và mật khẩu
-        if(username.equals("admin") && password.equals("123456")){
+        // Kiểm tra username
+        if(C_Account.get(username) != null){
             trace("Tồn tại tài khoản");
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.EXIT_ACCOUNT);
         }
@@ -118,26 +107,15 @@ public class HandlerLogin extends BaseHandler {
 
             // === Thao tác database ===
             // Thêm tài khoản
-
+            C_Account.insert(username, password);
             // Lấy thông tin tài khoản
-            M_Account account = new M_Account();
-            account.id = 2;
-            account.username = username;
-            account.password = password;
-            account.name = "name";
-
-            // === Gửi dữ liệu xuống ===
-            ISFSObject obj = new SFSObject();
-            obj.putInt(CmdDefine.ModuleUser.ID, account.id);
-            obj.putUtfString(CmdDefine.ModuleUser.USERNAME, account.username);
-            obj.putUtfString(CmdDefine.ModuleUser.PASSWORD, account.password);
-            obj.putUtfString(CmdDefine.ModuleUser.NAME, account.name);
-
-            packet.putSFSObject(CmdDefine.ModuleUser.ACCOUNT, obj);
+            M_Account account = C_Account.get(username, password);
+            packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
         }
 
+        // === Gửi dữ liệu xuống ===
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.REGISTER);
-        dataSend.putSFSObject(CmdDefine.ModuleUser.LOGIN_OUT_DATA, packet);
+        dataSend.putSFSObject(CmdDefine.ModuleAccount.LOGIN_OUT_DATA, packet);
     }
 
     private void OnUserLogout(ISFSEvent event) {

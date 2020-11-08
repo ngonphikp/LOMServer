@@ -26,13 +26,13 @@ public class CmdDefine {
     }
 
     public static class Module{
-        public static final String MODULE_USER = "user";
+        public static final String MODULE_ACCOUNT = "account";
         public static final String MODULE_CHARACTER = "character";
-        public static final String MODULE_MILESTONE = "milestone";
+        public static final String MODULE_TICK_MILESTONE = "tick_milestone";
         public static final String MODULE_GUILD = "guild";
     }
 
-    public static class ModuleUser{
+    public static class ModuleAccount{
         public static final String ID = "id";
         public static final String USERNAME = "username";
         public static final String PASSWORD = "password";
@@ -50,15 +50,14 @@ public class CmdDefine {
     }
 
     public static class ModuleCharacter{
-        public static final String ID_NV = "id_nv";
+        public static final String ID = "id";
         public static final String ID_CFG = "id_cfg";
-        public static final String ID_AC = "id_ac";
         public static final String LV = "lv";
         public static final String IDX = "idx";
     }
 
-    public static class ModuleMilestone{
-        public static final String ID_TML = "id_tml";
+    public static class ModuleTickMilestone{
+        public static final String ID = "id";
         public static final String ID_AC = "id_ac";
         public static final String ID_ML = "id_ml";
         public static final String STAR = "star";
