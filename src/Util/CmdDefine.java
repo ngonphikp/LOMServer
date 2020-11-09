@@ -64,4 +64,18 @@ public class CmdDefine {
 
         public static final String IS_SAVE = "is_save";
     }
+
+    public static class ModuleGuild
+    {
+        public static final String GUILD = "guild";
+        public static final String GUILDS = "guilds";
+
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String MASTER = "master";
+        public static final String LV = "lv";
+        public static final String NOTI = "noti";
+
+        public static final String ACCOUNTS = "accounts";
+    }
 }

@@ -97,7 +97,7 @@ public class HandlerLogin extends BaseHandler {
         trace("Đăng ký: " + username + " / " + password);
 
         // Kiểm tra username
-        if(C_Account.get(username) != null){
+        if(C_Account.getByUserName(username) != null){
             trace("Tồn tại tài khoản");
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.EXIT_ACCOUNT);
         }

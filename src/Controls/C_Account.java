@@ -52,12 +52,20 @@ public class C_Account extends BaseControl {
         return null;
     }
 
-    public static M_Account get(String username){
+    public static M_Account getByUserName(String username){
         if(CouchBase.containKey(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username)){
             String key = CouchBase.get(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username).getString("key");
             JsonObject obj = CouchBase.get(key);
             return new M_Account(obj);
         }
         return null;
+    }
+
+    public static M_Account getByKey(String key){
+        return (CouchBase.containKey(key)) ? new M_Account(CouchBase.get(key)) : null;
+    }
+
+    public static M_Account getByID(int id){
+        return getByKey(Module + "::" + id);
     }
 }

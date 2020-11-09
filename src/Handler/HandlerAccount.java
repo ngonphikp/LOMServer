@@ -106,7 +106,7 @@ public class HandlerAccount extends BaseHandler {
     }
 
     private void HandlerTavern(User user, ISFSObject data) {
-        trace("____________________________ HandleoTavern ____________________________");
+        trace("____________________________ HandlerTavern ____________________________");
 
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());

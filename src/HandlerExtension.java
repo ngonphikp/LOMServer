@@ -19,5 +19,6 @@ public class HandlerExtension extends BaseExtension {
         new HandlerAccount(this);
         new HandlerCharacter(this);
         new HandlerTickMilestone(this);
+        new HandlerGuild(this);
     }
 }
