@@ -17,6 +17,8 @@ public class CmdDefine {
         public static final int CREATEGUILD = 1010;
         public static final int GETGUILD = 1011;
         public static final int OUTGUILD = 1012;
+        public static final int PLEASEGUILD = 1013;
+        public static final int CHANGEMASTER = 1014;
     }
 
     public static class ErrorCode{
@@ -33,10 +35,12 @@ public class CmdDefine {
     }
 
     public static class ModuleAccount{
-        public static final String ID = "id";
-        public static final String USERNAME = "username";
-        public static final String PASSWORD = "password";
-        public static final String NAME = "name";
+        public static final String ID = "id_ac";
+        public static final String USERNAME = "username_ac";
+        public static final String PASSWORD = "password_ac";
+        public static final String NAME = "name_ac";
+
+        public static final String ID_GUILD = "id_guild";
 
         public static final String ACCOUNT = "account";
         public static final String LOGIN_OUT_DATA = "loginoutdata";
@@ -50,32 +54,33 @@ public class CmdDefine {
     }
 
     public static class ModuleCharacter{
-        public static final String ID = "id";
-        public static final String ID_CFG = "id_cfg";
-        public static final String LV = "lv";
-        public static final String IDX = "idx";
+        public static final String ID = "id_char";
+        public static final String ID_CFG = "id_cfg_char";
+        public static final String LV = "lv_char";
+        public static final String IDX = "idx_char";
     }
 
     public static class ModuleTickMilestone{
-        public static final String ID = "id";
+        public static final String ID = "id_tms";
+        public static final String STAR = "star_tms";
         public static final String ID_AC = "id_ac";
         public static final String ID_ML = "id_ml";
-        public static final String STAR = "star";
 
         public static final String IS_SAVE = "is_save";
     }
 
     public static class ModuleGuild
     {
-        public static final String GUILD = "guild";
-        public static final String GUILDS = "guilds";
-
-        public static final String ID = "id";
-        public static final String NAME = "name";
-        public static final String MASTER = "master";
-        public static final String LV = "lv";
-        public static final String NOTI = "noti";
+        public static final String ID = "id_guild";
+        public static final String NAME = "name_guild";
+        public static final String LV = "lv_guild";
+        public static final String NOTI = "noti_guild";
 
         public static final String ACCOUNTS = "accounts";
+
+        public static final String MASTER = "master";
+
+        public static final String GUILD = "guild";
+        public static final String GUILDS = "guilds";
     }
 }

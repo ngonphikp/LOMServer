@@ -4,9 +4,11 @@ import Base.BaseExtension;
 import Base.BaseHandler;
 import Controls.C_Account;
 import Controls.C_Character;
+import Controls.C_Guild;
 import Controls.C_TickMilestone;
 import Models.M_Character;
 import Models.M_TickMilestone;
+import Util.C_Util;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.core.SFSEventType;
@@ -48,6 +50,9 @@ public class HandlerAccount extends BaseHandler {
         int id = data.getInt(CmdDefine.ModuleAccount.ID);
 
         // === Thao tác database ===
+        // Lấy id guild
+        int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id));
+
         // Lấy danh sách nhân vật
         ArrayList<M_Character> lstCharacter = C_Character.gets(id);
 
@@ -57,6 +62,8 @@ public class HandlerAccount extends BaseHandler {
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        packet.putInt(CmdDefine.ModuleAccount.ID_GUILD, id_guild);
 
         ISFSArray characters = new SFSArray();
         for(int i = 0; i < lstCharacter.size(); i++){
@@ -71,6 +78,7 @@ public class HandlerAccount extends BaseHandler {
         packet.putSFSArray(CmdDefine.ModuleAccount.TICK_MILESTONES, tick_milestones);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GETINFO);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_ACCOUNT, packet, user);
     }
 
@@ -102,6 +110,7 @@ public class HandlerAccount extends BaseHandler {
         packet.putSFSArray(CmdDefine.ModuleAccount.CHARACTERS, characters);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SELECTION);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_ACCOUNT, packet, user);
     }
 
@@ -128,6 +137,7 @@ public class HandlerAccount extends BaseHandler {
         packet.putSFSObject(CmdDefine.ModuleAccount.CHARACTER, character.parse());
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.TAVERN);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_ACCOUNT, packet, user);
     }
 

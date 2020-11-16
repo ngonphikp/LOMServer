@@ -36,7 +36,55 @@ public class HandlerGuild extends BaseHandler {
             case CmdDefine.CMD.OUTGUILD:
                 HandleOutGuild(user, data);
                 break;
+            case CmdDefine.CMD.PLEASEGUILD:
+                HandlePleaseGuild(user, data);
+                break;
+            case CmdDefine.CMD.CHANGEMASTER:
+                HandleChangeMaster(user, data);
+                break;
         }
+    }
+
+    private void HandleChangeMaster(User user, ISFSObject data) {
+        trace("____________________________ HandleChangeMaster ____________________________");
+
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+        int id = data.getInt(CmdDefine.ModuleGuild.ID);
+        int master = data.getInt(CmdDefine.ModuleGuild.MASTER);
+
+        // === Thao tác database ===
+        C_Guild.setMaster(id, master);
+
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.CHANGEMASTER);
+        trace(packet.getDump());
+        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+    }
+
+    private void HandlePleaseGuild(User user, ISFSObject data) {
+        trace("____________________________ HandlePleaseGuild ____________________________");
+
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+        int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
+        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
+
+        // === Thao tác database ===
+        C_Guild.insertAccount(id_guild, id_ac);
+        M_Guild guild = C_Guild.get(id_guild);
+
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        packet.putSFSObject(CmdDefine.ModuleGuild.GUILD, guild.parse());
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.PLEASEGUILD);
+        trace(packet.getDump());
+        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
     }
 
     private void HandleGetGuild(User user, ISFSObject data) {
@@ -47,12 +95,15 @@ public class HandlerGuild extends BaseHandler {
         int id = data.getInt(CmdDefine.ModuleGuild.ID);
 
         // === Thao tác database ===
+        M_Guild guild = C_Guild.get(id);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
+        packet.putSFSObject(CmdDefine.ModuleGuild.GUILD, guild.parse());
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GETGUILD);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
     }
 
@@ -76,6 +127,7 @@ public class HandlerGuild extends BaseHandler {
 
         packet.putSFSArray(CmdDefine.ModuleGuild.GUILDS, arr);
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GETGUILDS);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
     }
 
@@ -99,6 +151,7 @@ public class HandlerGuild extends BaseHandler {
         packet.putSFSObject(CmdDefine.ModuleGuild.GUILD, guild.parse());
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.CREATEGUILD);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
     }
 
@@ -107,15 +160,18 @@ public class HandlerGuild extends BaseHandler {
 
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-        int id = data.getInt(CmdDefine.ModuleAccount.ID);
+        int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
+        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
 
         // === Thao tác database ===
+        C_Guild.deleteAccount(id_guild, id_ac);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.OUTGUILD);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
     }
 

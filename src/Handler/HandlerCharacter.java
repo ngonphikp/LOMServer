@@ -47,6 +47,7 @@ public class HandlerCharacter extends BaseHandler {
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.ARRANGE);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_CHARACTER, packet, user);
     }
 
@@ -66,6 +67,7 @@ public class HandlerCharacter extends BaseHandler {
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.UPLEVEL);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_CHARACTER, packet, user);
     }
 

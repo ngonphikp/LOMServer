@@ -80,6 +80,7 @@ public class HandlerLogin extends BaseHandler {
 
         // === Gửi dữ liệu xuống ===
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.LOGIN);
+        trace(packet.getDump());
         dataSend.putSFSObject(CmdDefine.ModuleAccount.LOGIN_OUT_DATA, packet);
     }
 
@@ -107,14 +108,15 @@ public class HandlerLogin extends BaseHandler {
 
             // === Thao tác database ===
             // Thêm tài khoản
-            C_Account.insert(username, password);
+            int id = C_Account.insert(username, password);
             // Lấy thông tin tài khoản
-            M_Account account = C_Account.get(username, password);
+            M_Account account = C_Account.get(id);
             packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
         }
 
         // === Gửi dữ liệu xuống ===
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.REGISTER);
+        trace(packet.getDump());
         dataSend.putSFSObject(CmdDefine.ModuleAccount.LOGIN_OUT_DATA, packet);
     }
 

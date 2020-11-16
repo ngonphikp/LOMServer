@@ -44,6 +44,7 @@ public class HandlerTickMilestone extends BaseHandler {
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.ENDGAME);
+        trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_TICK_MILESTONE, packet, user);
     }
 

@@ -16,12 +16,9 @@ public class C_Account extends BaseControl {
                     .put(CmdDefine.ModuleAccount.NAME, name);
             CouchBase.set(Module + "::" + id, obj);
         }
-        else {
-            System.out.println("Không tồn tại tài khoản: " + id);
-        }
     }
 
-    public static void insert(String username, String password){
+    public static int insert(String username, String password){
         // Get Count
         int id = getCount(Module) + 1;
         // Create Account
@@ -41,11 +38,13 @@ public class C_Account extends BaseControl {
         }
         // Update count
         updateCount(Module, id);
+
+        return id;
     }
 
     public static M_Account get(String username, String password){
-        if(CouchBase.containKey(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username)){
-            String key = CouchBase.get(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username).getString("key");
+        if(CouchBase.containKey("username->" + Module + "::" + username)){
+            String key = CouchBase.get("username->" + Module + "::" + username).getString("key");
             JsonObject obj = CouchBase.get(key);
             return (obj.getString(CmdDefine.ModuleAccount.PASSWORD).equals(password)) ? new M_Account(obj): null;
         }
@@ -53,8 +52,8 @@ public class C_Account extends BaseControl {
     }
 
     public static M_Account getByUserName(String username){
-        if(CouchBase.containKey(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username)){
-            String key = CouchBase.get(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username).getString("key");
+        if(CouchBase.containKey("username->" + Module + "::" + username)){
+            String key = CouchBase.get("username->" + Module + "::" + username).getString("key");
             JsonObject obj = CouchBase.get(key);
             return new M_Account(obj);
         }
@@ -65,7 +64,7 @@ public class C_Account extends BaseControl {
         return (CouchBase.containKey(key)) ? new M_Account(CouchBase.get(key)) : null;
     }
 
-    public static M_Account getByID(int id){
+    public static M_Account get(int id){
         return getByKey(Module + "::" + id);
     }
 }
