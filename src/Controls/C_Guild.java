@@ -22,6 +22,14 @@ public class C_Guild extends BaseControl {
         }
     }
 
+    public static void setNoti(int id, String noti){
+        if(CouchBase.containKey(Module + "::" + id)){
+            JsonObject obj = CouchBase.get(Module + "::" + id)
+                    .put(CmdDefine.ModuleGuild.NOTI, noti);
+            CouchBase.set(Module + "::" + id, obj);
+        }
+    }
+
     public static int insert(String name, int master){
         // Get Count
         int id = getCount(Module) + 1;
@@ -32,7 +40,8 @@ public class C_Guild extends BaseControl {
                     .put(CmdDefine.ModuleGuild.NAME, name)
                     .put(CmdDefine.ModuleGuild.MASTER, master)
                     .put(CmdDefine.ModuleGuild.LV, 1)
-                    .put(CmdDefine.ModuleGuild.NOTI, "Please add notice!");
+                    .put(CmdDefine.ModuleGuild.NOTI, "Please add notice!")
+                    .put(CmdDefine.ModuleGuild.EVT, "");
             CouchBase.set(Module + "::" + id, obj);
         }
 
@@ -89,7 +98,7 @@ public class C_Guild extends BaseControl {
     public static ArrayList<M_Guild> getAll(){
         ArrayList<M_Guild> result = new ArrayList<>();
         for(int i = 0; i <= getCount(Module); i++){
-            M_Guild guild = get(i);
+            M_Guild guild = get(i, true);
             if(guild != null){
                 result.add(guild);
             }
@@ -101,15 +110,15 @@ public class C_Guild extends BaseControl {
         return (CouchBase.containKey(key)) ? new M_Guild(CouchBase.get(key)) : null;
     }
 
-    public static M_Guild get(int id){
+    public static M_Guild get(int id, boolean isGetAccs){
         M_Guild guild = get(Module + "::" + id);
-        if(guild != null){
+        if(guild != null && isGetAccs){
             guild.accounts = getAccounts(id);
         }
         return guild;
     }
 
-    private static ArrayList<M_Account> getAccounts(int id){
+    public static ArrayList<M_Account> getAccounts(int id){
         ArrayList<M_Account> accounts = new ArrayList<>();
         JsonArray arr = CouchBase.get("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id).getArray("keys");
         if(arr != null){

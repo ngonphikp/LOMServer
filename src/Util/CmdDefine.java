@@ -12,13 +12,17 @@ public class CmdDefine {
         public static final int ARRANGE = 1005;
         public static final int TAVERN = 1006;
         public static final int UPLEVEL = 1007;
-        public static final int ENDGAME = 1008;
-        public static final int GETGUILDS = 1009;
-        public static final int CREATEGUILD = 1010;
-        public static final int GETGUILD = 1011;
-        public static final int OUTGUILD = 1012;
-        public static final int PLEASEGUILD = 1013;
-        public static final int CHANGEMASTER = 1014;
+        public static final int END_GAME = 1008;
+        public static final int GET_GUILDS = 1009;
+        public static final int CREATE_GUILD = 1010;
+        public static final int GET_GUILD = 1011;
+        public static final int OUT_GUILD = 1012;
+        public static final int PLEASE_GUILD = 1013;
+        public static final int FIX_MASTER_GUILD = 1014;
+        public static final int GET_NOTI_GUILD = 1015;
+        public static final int GET_EVENT_GUILD = 1016;
+        public static final int GET_MEMBER_GUID = 1017;
+        public static final int FIX_NOTI_GUILD = 1018;
     }
 
     public static class ErrorCode{
@@ -38,7 +42,15 @@ public class CmdDefine {
         public static final String ID = "id_ac";
         public static final String USERNAME = "username_ac";
         public static final String PASSWORD = "password_ac";
+
         public static final String NAME = "name_ac";
+
+        public static final String LV = "lv_ac";
+        public static final String POWER = "power_ac";
+
+        public static final String JOB = "job_ac";
+        public static final String DEDITOTAL = "dedication_total_ac";
+        public static final String DEDIWEEK = "dedication_week_ac";
 
         public static final String ID_GUILD = "id_guild";
 
@@ -75,6 +87,7 @@ public class CmdDefine {
         public static final String NAME = "name_guild";
         public static final String LV = "lv_guild";
         public static final String NOTI = "noti_guild";
+        public static final String EVT = "event_guild";
 
         public static final String ACCOUNTS = "accounts";
 

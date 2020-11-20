@@ -10,6 +10,20 @@ public class C_Account extends BaseControl {
 
     private static String Module = CmdDefine.Module.MODULE_ACCOUNT;
 
+    public static void setJob(int id, int job, boolean resetDedi){
+        if(CouchBase.containKey(Module + "::" + id)){
+            JsonObject obj = CouchBase.get(Module + "::" + id);
+            obj.put(CmdDefine.ModuleAccount.JOB, job);
+
+            if(resetDedi){
+                obj.put(CmdDefine.ModuleAccount.DEDIWEEK, 0);
+                obj.put(CmdDefine.ModuleAccount.DEDITOTAL, 0);
+            }
+
+            CouchBase.set(Module + "::" + id, obj);
+        }
+    }
+
     public static void setName(int id, String name){
         if(CouchBase.containKey(Module + "::" + id)){
             JsonObject obj = CouchBase.get(Module + "::" + id)
@@ -27,7 +41,12 @@ public class C_Account extends BaseControl {
                     .put(CmdDefine.ModuleAccount.ID, id)
                     .put(CmdDefine.ModuleAccount.USERNAME, username)
                     .put(CmdDefine.ModuleAccount.PASSWORD, password)
-                    .put(CmdDefine.ModuleAccount.NAME, "");
+                    .put(CmdDefine.ModuleAccount.NAME, "")
+                    .put(CmdDefine.ModuleAccount.LV, 1)
+                    .put(CmdDefine.ModuleAccount.POWER, 0)
+                    .put(CmdDefine.ModuleAccount.JOB, -1)
+                    .put(CmdDefine.ModuleAccount.DEDITOTAL, 0)
+                    .put(CmdDefine.ModuleAccount.DEDIWEEK, 0);
             CouchBase.set(Module + "::" + id, obj);
         }
         // Link username

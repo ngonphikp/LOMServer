@@ -18,7 +18,7 @@ public class HandlerTickMilestone extends BaseHandler {
     @Override
     protected void HandleClientRequest(int cmdId, User user, ISFSObject data) {
         switch (cmdId) {
-            case CmdDefine.CMD.ENDGAME:
+            case CmdDefine.CMD.END_GAME:
                 HandleEndGame(user, data);
                 break;
         }
@@ -43,7 +43,7 @@ public class HandlerTickMilestone extends BaseHandler {
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.ENDGAME);
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.END_GAME);
         trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_TICK_MILESTONE, packet, user);
     }
