@@ -2,7 +2,6 @@ package Controls;
 
 import Base.BaseControl;
 import Base.CouchBase;
-import Models.M_Account;
 import Models.M_Guild;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
@@ -40,8 +39,7 @@ public class C_Guild extends BaseControl {
                     .put(CmdDefine.ModuleGuild.NAME, name)
                     .put(CmdDefine.ModuleGuild.MASTER, master)
                     .put(CmdDefine.ModuleGuild.LV, 1)
-                    .put(CmdDefine.ModuleGuild.NOTI, "Please add notice!")
-                    .put(CmdDefine.ModuleGuild.EVT, "");
+                    .put(CmdDefine.ModuleGuild.NOTI, "Please add notice!");
             CouchBase.set(Module + "::" + id, obj);
         }
 
@@ -113,20 +111,9 @@ public class C_Guild extends BaseControl {
     public static M_Guild get(int id, boolean isGetAccs){
         M_Guild guild = get(Module + "::" + id);
         if(guild != null && isGetAccs){
-            guild.accounts = getAccounts(id);
+            guild.accounts = C_Account.getByIdGuild(id);
         }
         return guild;
-    }
-
-    public static ArrayList<M_Account> getAccounts(int id){
-        ArrayList<M_Account> accounts = new ArrayList<>();
-        JsonArray arr = CouchBase.get("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id).getArray("keys");
-        if(arr != null){
-            for(int i = 0; i < arr.size(); i++){
-                accounts.add(C_Account.getByKey((String) arr.get(i)));
-            }
-        }
-        return accounts;
     }
 
     public static String getKey(int id_ac){

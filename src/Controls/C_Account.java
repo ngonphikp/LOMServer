@@ -4,7 +4,10 @@ import Base.BaseControl;
 import Base.CouchBase;
 import Models.M_Account;
 import Util.CmdDefine;
+import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
+
+import java.util.ArrayList;
 
 public class C_Account extends BaseControl {
 
@@ -79,11 +82,22 @@ public class C_Account extends BaseControl {
         return null;
     }
 
-    public static M_Account getByKey(String key){
+    private static M_Account getByKey(String key){
         return (CouchBase.containKey(key)) ? new M_Account(CouchBase.get(key)) : null;
     }
 
     public static M_Account get(int id){
         return getByKey(Module + "::" + id);
+    }
+
+    public static ArrayList<M_Account> getByIdGuild(int id_guild){
+        ArrayList<M_Account> accounts = new ArrayList<>();
+        JsonArray arr = CouchBase.get("id_guild->" + Module + "::" + id_guild).getArray("keys");
+        if(arr != null){
+            for(int i = 0; i < arr.size(); i++){
+                accounts.add(getByKey((String) arr.get(i)));
+            }
+        }
+        return accounts;
     }
 }

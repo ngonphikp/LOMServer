@@ -3,8 +3,10 @@ package Handler;
 import Base.BaseExtension;
 import Base.BaseHandler;
 import Controls.C_Account;
+import Controls.C_EventGuild;
 import Controls.C_Guild;
 import Models.M_Account;
+import Models.M_EventGuild;
 import Models.M_Guild;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
@@ -64,11 +66,14 @@ public class HandlerGuild extends BaseHandler {
 
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-        int id = data.getInt(CmdDefine.ModuleGuild.ID);
+        int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
+        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
         int master = data.getInt(CmdDefine.ModuleGuild.MASTER);
 
         // === Thao tác database ===
-        C_Guild.setMaster(id, master);
+        C_Guild.setMaster(id_guild, master);
+
+        C_EventGuild.insert("Hội trưởng: " + C_Account.get(id_ac).name + " nhường chức cho " + C_Account.get(master).name, id_guild);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -91,6 +96,8 @@ public class HandlerGuild extends BaseHandler {
         C_Guild.insertAccount(id_guild, id_ac);
         C_Account.setJob(id_ac, 0, true);
         M_Guild guild = C_Guild.get(id_guild, true);
+
+        C_EventGuild.insert(C_Account.get(id_ac).name + " Gia nhập hội !", id_guild);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -148,15 +155,21 @@ public class HandlerGuild extends BaseHandler {
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
         int id = data.getInt(CmdDefine.ModuleGuild.ID);
+        int count = data.getInt(CmdDefine.ModuleEventGuild.COUNT);
 
         // === Thao tác database ===
-        String evt = C_Guild.get(id, false).evt;
+        ArrayList<M_EventGuild> lstEvt = C_EventGuild.getByIdGuild(id, count);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        packet.putUtfString(CmdDefine.ModuleGuild.EVT, evt);
+        ISFSArray events = new SFSArray();
+        for(int i = 0; i < lstEvt.size(); i++){
+            events.addSFSObject(lstEvt.get(i).parse());
+        }
+        packet.putSFSArray(CmdDefine.ModuleGuild.EVENTS, events);
+
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_EVENT_GUILD);
         trace(packet.getDump());
         this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
@@ -170,7 +183,7 @@ public class HandlerGuild extends BaseHandler {
         int id = data.getInt(CmdDefine.ModuleGuild.ID);
 
         // === Thao tác database ===
-        ArrayList<M_Account> lstAccount = C_Guild.getAccounts(id);
+        ArrayList<M_Account> lstAccount = C_Account.getByIdGuild(id);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -192,11 +205,14 @@ public class HandlerGuild extends BaseHandler {
 
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-        int id = data.getInt(CmdDefine.ModuleGuild.ID);
+        int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
+        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
         String noti = data.getUtfString(CmdDefine.ModuleGuild.NOTI);
 
         // === Thao tác database ===
-        C_Guild.setNoti(id, noti);
+        C_Guild.setNoti(id_guild, noti);
+
+        C_EventGuild.insert(C_Account.get(id_ac).name + " Sửa thông báo !", id_guild);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -247,6 +263,8 @@ public class HandlerGuild extends BaseHandler {
         // Lấy lại thông tin guild
         M_Guild guild = C_Guild.get(id, true);
 
+        C_EventGuild.insert(C_Account.get(master).name + " Tạo hội !", id);
+
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
@@ -268,6 +286,8 @@ public class HandlerGuild extends BaseHandler {
         // === Thao tác database ===
         C_Account.setJob(id_ac, -1, true);
         C_Guild.deleteAccount(id_guild, id_ac);
+
+        C_EventGuild.insert(C_Account.get(id_ac).name + " Thoát hội !", id_guild);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();

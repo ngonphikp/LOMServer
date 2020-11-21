@@ -36,6 +36,7 @@ public class CmdDefine {
         public static final String MODULE_CHARACTER = "character";
         public static final String MODULE_TICK_MILESTONE = "tick_milestone";
         public static final String MODULE_GUILD = "guild";
+        public static final String MODULE_EVENT_GUILD = "event_guild";
     }
 
     public static class ModuleAccount{
@@ -87,7 +88,6 @@ public class CmdDefine {
         public static final String NAME = "name_guild";
         public static final String LV = "lv_guild";
         public static final String NOTI = "noti_guild";
-        public static final String EVT = "event_guild";
 
         public static final String ACCOUNTS = "accounts";
 
@@ -95,5 +95,16 @@ public class CmdDefine {
 
         public static final String GUILD = "guild";
         public static final String GUILDS = "guilds";
+
+        public static final String EVENTS = "events";
+    }
+
+    public static class ModuleEventGuild
+    {
+        public static final String ID = "id_evt_guild";
+        public static final String CONTENT = "content_evt_guild";
+        public static final String TIME = "time_evt_guild";
+
+        public static final String COUNT = "count_evt_guild";
     }
 }

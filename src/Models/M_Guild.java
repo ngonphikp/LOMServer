@@ -16,10 +16,12 @@ public class M_Guild {
     public String name;
     public int lv;
     public String noti;
-    public String evt;
+
     public int master;
 
     public ArrayList<M_Account> accounts = new ArrayList<>();
+
+    public ArrayList<M_EventGuild> events = new ArrayList<>();
 
     public M_Guild(){}
 
@@ -29,7 +31,6 @@ public class M_Guild {
         lv = obj.getInt(CmdDefine.ModuleGuild.LV);
         master = obj.getInt(CmdDefine.ModuleGuild.MASTER);
         noti = obj.getString(CmdDefine.ModuleGuild.NOTI);
-        evt = obj.getString(CmdDefine.ModuleGuild.EVT);
     }
 
     public ISFSObject parse(){
@@ -39,12 +40,12 @@ public class M_Guild {
         obj.putInt(CmdDefine.ModuleGuild.LV, lv);
         obj.putInt(CmdDefine.ModuleGuild.MASTER, master);
         obj.putUtfString(CmdDefine.ModuleGuild.NOTI, noti);
-        obj.putUtfString(CmdDefine.ModuleGuild.EVT, evt);
-        ISFSArray arr = new SFSArray();
+
+        ISFSArray arrAcc = new SFSArray();
         for(int i = 0; i < accounts.size(); i++){
-            arr.addSFSObject(accounts.get(i).parse());
+            arrAcc.addSFSObject(accounts.get(i).parse());
         }
-        obj.putSFSArray(CmdDefine.ModuleGuild.ACCOUNTS, arr);
+        obj.putSFSArray(CmdDefine.ModuleGuild.ACCOUNTS, arrAcc);
         return  obj;
     }
 }
