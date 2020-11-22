@@ -53,6 +53,8 @@ public class HandlerLogin extends BaseHandler {
     }
 
     private void HandleLogin(ISFSEvent event) {
+        trace("____________________________ HandleLogin ____________________________");
+
         ISFSObject dataRec = (ISFSObject) event.getParameter(SFSEventParam.LOGIN_IN_DATA);
         ISFSObject dataSend = (ISFSObject) event.getParameter(SFSEventParam.LOGIN_OUT_DATA);
         ISFSObject packet = new SFSObject();
@@ -85,6 +87,8 @@ public class HandlerLogin extends BaseHandler {
     }
 
     private void HandleRegister(ISFSEvent event) {
+        trace("____________________________ HandleRegister ____________________________");
+
         ISFSObject dataRec = (ISFSObject) event.getParameter(SFSEventParam.LOGIN_IN_DATA);
         ISFSObject dataSend = (ISFSObject) event.getParameter(SFSEventParam.LOGIN_OUT_DATA);
         ISFSObject packet = new SFSObject();

@@ -64,10 +64,11 @@ public class HandlerGuild extends BaseHandler {
     private void HandleChangeMaster(User user, ISFSObject data) {
         trace("____________________________ HandleChangeMaster ____________________________");
 
+        int id_ac = Integer.parseInt(user.getName());
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
+
         int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
-        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
         int master = data.getInt(CmdDefine.ModuleGuild.MASTER);
 
         // === Thao tác database ===
@@ -87,10 +88,11 @@ public class HandlerGuild extends BaseHandler {
     private void HandlePleaseGuild(User user, ISFSObject data) {
         trace("____________________________ HandlePleaseGuild ____________________________");
 
+        int id_ac = Integer.parseInt(user.getName());
+
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
         int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
-        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
 
         // === Thao tác database ===
         C_Guild.insertAccount(id_guild, id_ac);
@@ -203,10 +205,11 @@ public class HandlerGuild extends BaseHandler {
     private void HandleFixNotiGuild(User user, ISFSObject data) {
         trace("____________________________ HandleFixNotiGuild ____________________________");
 
+        int id_ac = Integer.parseInt(user.getName());
+
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
         int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
-        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
         String noti = data.getUtfString(CmdDefine.ModuleGuild.NOTI);
 
         // === Thao tác database ===
@@ -250,10 +253,11 @@ public class HandlerGuild extends BaseHandler {
     private void HandleCreateGuild(User user, ISFSObject data) {
         trace("____________________________ HandleCreateGuild ____________________________");
 
+        int master = Integer.parseInt(user.getName());
+
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
         String name = data.getUtfString(CmdDefine.ModuleGuild.NAME);
-        int master = data.getInt(CmdDefine.ModuleGuild.MASTER);
 
         // === Thao tác database ===
         // Thêm guild
@@ -278,10 +282,11 @@ public class HandlerGuild extends BaseHandler {
     private void HandleOutGuild(User user, ISFSObject data) {
         trace("____________________________ HandleOutGuild ____________________________");
 
+        int id_ac = Integer.parseInt(user.getName());
+
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
         int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
-        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
 
         // === Thao tác database ===
         C_Account.setJob(id_ac, -1, true);

@@ -49,6 +49,9 @@ public class HandlerAccount extends BaseHandler {
         trace(data.getDump());
         int id = data.getInt(CmdDefine.ModuleAccount.ID);
 
+        // === Thay đổi user name = id ===
+        user.setName(id + "");
+
         // === Thao tác database ===
         // Lấy id guild
         int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id));
@@ -85,9 +88,10 @@ public class HandlerAccount extends BaseHandler {
     private void HandleSelection(User user, ISFSObject data) {
         trace("____________________________ HandleSelection ____________________________");
 
+        int id = Integer.parseInt(user.getName());
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-        int id = data.getInt(CmdDefine.ModuleAccount.ID);
+
         String name = data.getUtfString(CmdDefine.ModuleAccount.NAME);
         String id_cfg = data.getUtfString(CmdDefine.ModuleCharacter.ID_CFG);
 
@@ -117,9 +121,10 @@ public class HandlerAccount extends BaseHandler {
     private void HandlerTavern(User user, ISFSObject data) {
         trace("____________________________ HandlerTavern ____________________________");
 
+        int id_ac = Integer.parseInt(user.getName());
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-        int id_ac = data.getInt(CmdDefine.ModuleAccount.ID);
+
         int type = data.getInt(CmdDefine.ModuleAccount.TYPE_TAVERN);
 
         // === Thao tác database ===

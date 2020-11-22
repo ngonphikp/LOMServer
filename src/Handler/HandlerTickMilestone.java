@@ -27,10 +27,11 @@ public class HandlerTickMilestone extends BaseHandler {
     private void HandleEndGame(User user, ISFSObject data) {
         trace("____________________________ HandleEndGame ____________________________");
 
+        int id_ac = Integer.parseInt(user.getName());
+
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
         boolean isSave = data.getBool(CmdDefine.ModuleTickMilestone.IS_SAVE);
-        int id_ac = data.getInt(CmdDefine.ModuleTickMilestone.ID_AC);
         int id_ml = data.getInt(CmdDefine.ModuleTickMilestone.ID_ML);
         int star = data.getInt(CmdDefine.ModuleTickMilestone.STAR);
 
