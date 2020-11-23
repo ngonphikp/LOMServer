@@ -2,6 +2,8 @@ package Handler;
 
 import Base.BaseExtension;
 import Base.BaseHandler;
+import Base.RoomManage;
+import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.entities.User;
@@ -29,6 +31,9 @@ public class HandlerZone extends BaseHandler {
             case USER_DISCONNECT:
                 OnUserDisconnect(event);
                 break;
+            case SERVER_READY:
+                OnServerReady(event);
+                break;
         }
     }
 
@@ -40,6 +45,12 @@ public class HandlerZone extends BaseHandler {
         trace("____________________________ OnUserDisconnect ____________________________");
     }
 
+    public void OnServerReady(ISFSEvent event){
+        trace("____________________________ OnServerReady ____________________________");
+
+        RoomManage.initRoom(this.extension, CmdDefine.Room.Global, CmdDefine.Room.Global, 10000);
+    }
+
     @Override
     protected void initHandlerClientRequest() {
 
@@ -49,5 +60,7 @@ public class HandlerZone extends BaseHandler {
     protected void initHandlerServerEvent() {
         this.extension.addEventHandler(SFSEventType.USER_JOIN_ZONE, this);
         this.extension.addEventHandler(SFSEventType.USER_DISCONNECT, this);
+
+        this.extension.addEventHandler(SFSEventType.SERVER_READY, this);
     }
 }

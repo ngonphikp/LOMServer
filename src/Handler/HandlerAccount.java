@@ -2,6 +2,7 @@ package Handler;
 
 import Base.BaseExtension;
 import Base.BaseHandler;
+import Base.RoomManage;
 import Controls.C_Account;
 import Controls.C_Character;
 import Controls.C_Guild;
@@ -12,6 +13,7 @@ import Util.C_Util;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.core.SFSEventType;
+import com.smartfoxserver.v2.entities.Room;
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
@@ -51,6 +53,10 @@ public class HandlerAccount extends BaseHandler {
 
         // === Thay đổi user name = id ===
         user.setName(id + "");
+
+        // === Vào room thế giới
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        RoomManage.userJoinRoom(this.extension, user, room);
 
         // === Thao tác database ===
         // Lấy id guild

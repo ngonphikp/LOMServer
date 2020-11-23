@@ -7,12 +7,19 @@ public class CmdDefine {
     public static class CMD{
         public static final int REGISTER = 1001;
         public static final int LOGIN = 1002;
+
         public static final int GETINFO = 1003;
+
         public static final int SELECTION = 1004;
+
         public static final int ARRANGE = 1005;
+
         public static final int TAVERN = 1006;
+
         public static final int UPLEVEL = 1007;
+
         public static final int END_GAME = 1008;
+
         public static final int GET_GUILDS = 1009;
         public static final int CREATE_GUILD = 1010;
         public static final int GET_GUILD = 1011;
@@ -23,6 +30,8 @@ public class CmdDefine {
         public static final int GET_EVENT_GUILD = 1016;
         public static final int GET_MEMBER_GUID = 1017;
         public static final int FIX_NOTI_GUILD = 1018;
+
+        public static final int GET_ACCOUNT_GLOBAL = 1019;
     }
 
     public static class ErrorCode{
@@ -31,12 +40,18 @@ public class CmdDefine {
         public static final short EXIT_ACCOUNT = 2;
     }
 
+    public static class Room{
+        public static  final String Global = "Global";
+        public static  final String Game = "Game";
+    }
+
     public static class Module{
         public static final String MODULE_ACCOUNT = "account";
         public static final String MODULE_CHARACTER = "character";
         public static final String MODULE_TICK_MILESTONE = "tick_milestone";
         public static final String MODULE_GUILD = "guild";
         public static final String MODULE_EVENT_GUILD = "event_guild";
+        public static final String MODULE_CHAT_AND_FRIEND = "chat_and_friend";
     }
 
     public static class ModuleAccount{
@@ -106,5 +121,11 @@ public class CmdDefine {
         public static final String TIME = "time_evt_guild";
 
         public static final String COUNT = "count_evt_guild";
+    }
+
+    public static class ModuleCF
+    {
+        public static final String ACCOUNTS_ONLINE = "accounts_online";
+        public static final String ACCOUNTS_OFFLINE = "accounts_offline";
     }
 }

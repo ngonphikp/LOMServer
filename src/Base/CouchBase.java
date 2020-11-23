@@ -10,7 +10,7 @@ public class CouchBase {
     private static Cluster cluster = null;
     private static Bucket bucket = null;
 
-    public static void Init(){
+    public static void init(){
         String bucketName = "LOM";
         String username = "ngonphikp";
         String password = "123456";

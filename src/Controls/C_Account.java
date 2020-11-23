@@ -3,6 +3,7 @@ package Controls;
 import Base.BaseControl;
 import Base.CouchBase;
 import Models.M_Account;
+import Models.M_Guild;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -99,5 +100,16 @@ public class C_Account extends BaseControl {
             }
         }
         return accounts;
+    }
+
+    public static ArrayList<M_Account> getAll(){
+        ArrayList<M_Account> result = new ArrayList<>();
+        for(int i = 0; i <= getCount(Module); i++){
+            M_Account account = get(i);
+            if(account != null){
+                result.add(account);
+            }
+        }
+        return result;
     }
 }
