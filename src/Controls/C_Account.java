@@ -3,7 +3,6 @@ package Controls;
 import Base.BaseControl;
 import Base.CouchBase;
 import Models.M_Account;
-import Models.M_Guild;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;

@@ -32,16 +32,21 @@ public class CmdDefine {
         public static final int FIX_NOTI_GUILD = 1018;
 
         public static final int GET_ACCOUNT_GLOBAL = 1019;
+        public static final int SEND_MESSAGE_GLOBAL = 1020;
+        public static final int GET_ACCOUNT_GUILD = 1021;
+        public static final int SEND_MESSAGE_GUILD = 1022;
     }
 
     public static class ErrorCode{
         public static final short SUCCESS = 0;
         public static final short WRONG_USERNAME_OR_PASSWORD = 1;
         public static final short EXIT_ACCOUNT = 2;
+        public static final short ACCOUNT_LOGON = 3;
     }
 
     public static class Room{
         public static  final String Global = "Global";
+        public static  final String Guild = "Guild";
         public static  final String Game = "Game";
     }
 
@@ -127,5 +132,8 @@ public class CmdDefine {
     {
         public static final String ACCOUNTS_ONLINE = "accounts_online";
         public static final String ACCOUNTS_OFFLINE = "accounts_offline";
+
+        public static final String ACCOUNT = "account_cf";
+        public static final String MESSAGE = "message_cf";
     }
 }

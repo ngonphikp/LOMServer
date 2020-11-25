@@ -2,6 +2,7 @@ package Handler;
 
 import Base.BaseExtension;
 import Base.BaseHandler;
+import Base.RoomManage;
 import Controls.C_Account;
 import Controls.C_EventGuild;
 import Controls.C_Guild;
@@ -11,6 +12,7 @@ import Models.M_Guild;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.core.SFSEventType;
+import com.smartfoxserver.v2.entities.Room;
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSArray;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
@@ -100,6 +102,14 @@ public class HandlerGuild extends BaseHandler {
         M_Guild guild = C_Guild.get(id_guild, true);
 
         C_EventGuild.insert(C_Account.get(id_ac).name + " Gia nhập hội !", id_guild);
+
+        // === Thao tác với room Guild
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + guild.id);
+        if(room == null){
+            RoomManage.initRoom(this.extension, CmdDefine.Room.Guild + guild.id, CmdDefine.Room.Guild, 50);
+            room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + guild.id);
+        }
+        RoomManage.userJoinRoom(this.extension, user, room);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -269,6 +279,13 @@ public class HandlerGuild extends BaseHandler {
 
         C_EventGuild.insert(C_Account.get(master).name + " Tạo hội !", id);
 
+        // === Thao tác room guild
+        // Tạo room guild + id
+        RoomManage.initRoom(this.extension, CmdDefine.Room.Guild + guild.id, CmdDefine.Room.Guild, 50);
+        // User join room
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + guild.id);
+        RoomManage.userJoinRoom(this.extension, user, room);
+
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
@@ -293,6 +310,11 @@ public class HandlerGuild extends BaseHandler {
         C_Guild.deleteAccount(id_guild, id_ac);
 
         C_EventGuild.insert(C_Account.get(id_ac).name + " Thoát hội !", id_guild);
+
+        // === Thao tác room guild
+        // User out room
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
+        RoomManage.userOutRoom(user, room);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();

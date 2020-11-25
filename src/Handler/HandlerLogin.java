@@ -2,15 +2,22 @@ package Handler;
 
 import Base.BaseExtension;
 import Base.BaseHandler;
+import Base.RoomManage;
 import Controls.C_Account;
+import Controls.C_Guild;
 import Models.M_Account;
+import Util.C_Util;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
+import com.smartfoxserver.v2.core.ISFSEventParam;
 import com.smartfoxserver.v2.core.SFSEventParam;
 import com.smartfoxserver.v2.core.SFSEventType;
+import com.smartfoxserver.v2.entities.Room;
 import com.smartfoxserver.v2.entities.User;
 import com.smartfoxserver.v2.entities.data.ISFSObject;
 import com.smartfoxserver.v2.entities.data.SFSObject;
+
+import java.util.List;
 
 public class HandlerLogin extends BaseHandler {
 
@@ -72,8 +79,25 @@ public class HandlerLogin extends BaseHandler {
         M_Account account = C_Account.get(username, password);
         if(account != null){
             trace("Tồn tại tài khoản");
-            packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
-            packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
+
+            // === Thao tác room global ===
+            // Lấy list user Online
+            Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+            List<User> lstUser = room.getUserList();
+            boolean isOnl = false;
+            for (int i = 0; i < lstUser.size(); i++) {
+                if(account.id == Integer.parseInt(lstUser.get(i).getName())){
+                    trace("Tài khoản đang đăng nhập ở nơi khác");
+                    packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.ACCOUNT_LOGON);
+                    isOnl = true;
+                    break;
+                }
+            }
+
+            if(!isOnl){
+                packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+                packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
+            }
         }
         else {
             trace("Không tồn tại tài khoản");
@@ -126,6 +150,21 @@ public class HandlerLogin extends BaseHandler {
 
     private void OnUserLogout(ISFSEvent event) {
         trace("____________________________ OnUserLogout ____________________________");
+
+        // === Thao tác với room global
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        User user = (User) event.getParameter(SFSEventParam.USER);
+        RoomManage.userOutRoom(user, room);
+
+        // === Thao tác với room guild
+        String keyGuild = C_Guild.getKey(Integer.parseInt(user.getName()));
+        if(keyGuild != null){
+            int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, keyGuild);
+            Room roomG = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
+            RoomManage.userOutRoom(user, roomG);
+
+            if(roomG.getUserList().size() == 0) RoomManage.removeRoom(this.getParentExtension(), roomG);
+        }
     }
 
     @Override

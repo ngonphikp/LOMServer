@@ -11,6 +11,7 @@ import com.smartfoxserver.v2.extensions.SFSExtension;
 public class RoomManage {
 
     public static void initRoom(SFSExtension sfsExtension, String name, String groupId, int maxUser){
+        System.out.println("________________________________________________________Int room: " + name + " (" + groupId + " )");
         CreateRoomSettings roomSetting = new CreateRoomSettings();
 
         roomSetting.setName(name);
@@ -30,6 +31,7 @@ public class RoomManage {
     }
 
     public static void userJoinRoom(SFSExtension sfsExtension, User user, Room room){
+        System.out.println("________________________________________________________" + user.getName() + " join room: " + room.getName());
         try {
             sfsExtension.getApi().joinRoom(user, room);
         } catch (SFSJoinRoomException e) {
@@ -38,6 +40,12 @@ public class RoomManage {
     }
 
     public static void userOutRoom(User user, Room room){
+        System.out.println("________________________________________________________" + user.getName() + " out room: " + room.getName());
         room.removeUser(user);
+    }
+
+    public static  void removeRoom(SFSExtension sfsExtension, Room room){
+        System.out.println("________________________________________________________Remove room: " + room.getName());
+        sfsExtension.getApi().removeRoom(room);
     }
 }

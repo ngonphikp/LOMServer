@@ -54,13 +54,25 @@ public class HandlerAccount extends BaseHandler {
         // === Thay đổi user name = id ===
         user.setName(id + "");
 
-        // === Vào room thế giới
+        // === Thao tác với room thế giới
         Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
         RoomManage.userJoinRoom(this.extension, user, room);
 
         // === Thao tác database ===
         // Lấy id guild
         int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id));
+
+        // === Thao tác với room guild
+        if(id_guild != -1){
+            Room roomG = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
+            if(roomG == null){
+                // Tạo room guild + id
+                RoomManage.initRoom(this.extension, CmdDefine.Room.Guild + id_guild, CmdDefine.Room.Guild, 50);
+
+                roomG = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
+            }
+            RoomManage.userJoinRoom(this.extension, user, roomG);
+        }
 
         // Lấy danh sách nhân vật
         ArrayList<M_Character> lstCharacter = C_Character.gets(id);
