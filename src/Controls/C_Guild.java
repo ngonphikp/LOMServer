@@ -8,6 +8,7 @@ import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class C_Guild extends BaseControl {
 
@@ -58,18 +59,23 @@ public class C_Guild extends BaseControl {
 
     public static void deleteAccount(int id_guild, int id_ac){
         // UnLinkAccounts
-        JsonObject obj = JsonObject.create();
-        JsonArray accounts = JsonArray.create();
         if(CouchBase.containKey("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild)){
-            JsonArray old = CouchBase.get("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild).getArray("keys");
-            for(int i = 0; i < old.size(); i++){
-                if(!old.getString(i).equals(CmdDefine.Module.MODULE_ACCOUNT + "::" + id_ac)){
-                    accounts.add(old.getString(i));
+            JsonObject obj = JsonObject.create();
+            JsonArray accounts = CouchBase.get("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild).getArray("keys");
+            int find = -1;
+            for(int i = 0; i < accounts.size(); i++){
+                if(accounts.getString(i).equals(CmdDefine.Module.MODULE_ACCOUNT + "::" + id_ac)){
+                    find = i;
+                    break;
                 }
             }
+            if (find != -1) {
+                List<Object> lst = accounts.toList();
+                lst.remove(find);
+                obj.put("keys", lst);
+                CouchBase.set("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild, obj);
+            }
         }
-        obj.put("keys", accounts);
-        CouchBase.set("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild, obj);
 
         // UnLinkId_ac
         CouchBase.delete("id_ac->" + Module + "::" + id_ac);

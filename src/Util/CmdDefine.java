@@ -8,7 +8,7 @@ public class CmdDefine {
         public static final int REGISTER = 1001;
         public static final int LOGIN = 1002;
 
-        public static final int GETINFO = 1003;
+        public static final int GET_INFO = 1003;
 
         public static final int SELECTION = 1004;
 
@@ -35,6 +35,14 @@ public class CmdDefine {
         public static final int SEND_MESSAGE_GLOBAL = 1020;
         public static final int GET_ACCOUNT_GUILD = 1021;
         public static final int SEND_MESSAGE_GUILD = 1022;
+
+        public static final int GET_DETAILS = 1023;
+        public static final int MAKE_FRIEND = 1024;
+        public static final int REMOVE_FRIEND = 1025;
+        public static final int GET_ACCOUNT_FRIEND = 1026;
+        public static final int FIND_ACCOUNT_GLOBAL = 1027;
+
+        public static final int SEND_MESSAGE_PRIVATE = 1028;
     }
 
     public static class ErrorCode{
@@ -130,10 +138,15 @@ public class CmdDefine {
 
     public static class ModuleCF
     {
-        public static final String ACCOUNTS_ONLINE = "accounts_online";
-        public static final String ACCOUNTS_OFFLINE = "accounts_offline";
+        public static final String ACCOUNTS = "accounts";
+        public static final String ID_ONLINES = "id_onlines";
 
         public static final String ACCOUNT = "account_cf";
         public static final String MESSAGE = "message_cf";
+
+        public static final String IS_FRIEND = "is_friend";
+
+        public static final String CONTENT = "content";
+        public static final String IS_CHECK_ID = "is_check_id";
     }
 }

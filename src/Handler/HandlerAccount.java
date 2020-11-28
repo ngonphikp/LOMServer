@@ -26,13 +26,13 @@ import java.util.Random;
 public class HandlerAccount extends BaseHandler {
 
     public HandlerAccount(BaseExtension extension) {
-        super(extension);
+        super(extension, CmdDefine.Module.MODULE_ACCOUNT);
     }
 
     @Override
     protected void HandleClientRequest(int cmdId, User user, ISFSObject data) {
         switch (cmdId) {
-            case CmdDefine.CMD.GETINFO:
+            case CmdDefine.CMD.GET_INFO:
                 HandleGetInfo(user, data);
                 break;
             case CmdDefine.CMD.SELECTION:
@@ -98,9 +98,9 @@ public class HandlerAccount extends BaseHandler {
         }
         packet.putSFSArray(CmdDefine.ModuleAccount.TICK_MILESTONES, tick_milestones);
 
-        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GETINFO);
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_INFO);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_ACCOUNT, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleSelection(User user, ISFSObject data) {
@@ -133,7 +133,7 @@ public class HandlerAccount extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SELECTION);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_ACCOUNT, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandlerTavern(User user, ISFSObject data) {
@@ -161,7 +161,7 @@ public class HandlerAccount extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.TAVERN);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_ACCOUNT, packet, user);
+        this.send(this.module, packet, user);
     }
 
     @Override

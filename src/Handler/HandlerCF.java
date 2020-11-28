@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Controls.C_Account;
+import Controls.C_Character;
 import Controls.C_Guild;
 import Models.M_Account;
+import Models.M_Character;
+import Models.M_Guild;
 import Util.C_Util;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
@@ -22,7 +25,7 @@ import com.smartfoxserver.v2.entities.data.SFSObject;
 
 public class HandlerCF extends BaseHandler {
     public HandlerCF(BaseExtension extension) {
-        super(extension);
+        super(extension, CmdDefine.Module.MODULE_CHAT_AND_FRIEND);
     }
 
     @Override
@@ -40,6 +43,24 @@ public class HandlerCF extends BaseHandler {
             case CmdDefine.CMD.SEND_MESSAGE_GUILD:
                 HandleSendMessageGuild(user, data);
                 break;
+            case CmdDefine.CMD.GET_DETAILS:
+                HandlerGetDetails(user, data);
+                break;
+            case CmdDefine.CMD.MAKE_FRIEND:
+                HandleMakeFriend(user, data);
+                break;
+            case CmdDefine.CMD.REMOVE_FRIEND:
+                HandleRemoveFriend(user, data);
+                break;
+            case CmdDefine.CMD.GET_ACCOUNT_FRIEND:
+                HandleGetAccountFriend(user, data);
+                break;
+            case CmdDefine.CMD.FIND_ACCOUNT_GLOBAL:
+                HandleFindAccountGlobal(user, data);
+                break;
+            case CmdDefine.CMD.SEND_MESSAGE_PRIVATE:
+                HandleSendMessagePrivate(user, data);
+                break;
         }
     }
 
@@ -50,57 +71,93 @@ public class HandlerCF extends BaseHandler {
         trace(data.getDump());
 
         // === Thao tác database và room global ===
-        ArrayList<M_Account> lstAccOnl = new ArrayList<>();
-        ArrayList<String> ids = new ArrayList<>();
-        ids.add(user.getName());
+        ArrayList<M_Account> lstAcc = C_Account.getAll();
+        ISFSArray idOnls = new SFSArray();
 
-        // Online
         Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
         List<User> lstUser = room.getUserList();
-        for (int i = 0; i < lstUser.size(); i++) {
-            if(!lstUser.get(i).getName().equals(user.getName())){
-                lstAccOnl.add(C_Account.get(Integer.parseInt(lstUser.get(i).getName())));
-                ids.add(lstUser.get(i).getName());
-            }
-        }
-
-        // Offline
-        ArrayList<M_Account> lstAccOff = new ArrayList<>();
-        boolean isEx = false;
-        ArrayList<M_Account> allAcc = C_Account.getAll();
-        for (int i = 0; i < allAcc.size(); i++) {
-            for(int j = 0; j < ids.size(); j++){
-                if(Integer.parseInt(ids.get(j)) == allAcc.get(i).id) {
-                    isEx = true;
-                    break;
-                }
-                isEx = false;
-            }
-            if(!isEx){
-                lstAccOff.add(allAcc.get(i));
-                isEx = false;
-            }
-        }
+        for (int i = 0; i < lstUser.size(); i++) idOnls.addInt(Integer.parseInt(lstUser.get(i).getName()));
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        ISFSArray accOnls = new SFSArray();
-        for(int i = 0; i < lstAccOnl.size(); i++){
-            accOnls.addSFSObject(lstAccOnl.get(i).parse());
+        ISFSArray accs = new SFSArray();
+        for(int i = 0; i < lstAcc.size(); i++){
+            accs.addSFSObject(lstAcc.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS_ONLINE, accOnls);
+        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS, accs);
 
-        ISFSArray accOffs = new SFSArray();
-        for(int i = 0; i < lstAccOff.size(); i++){
-            accOffs.addSFSObject(lstAccOff.get(i).parse());
-        }
-        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS_OFFLINE, accOffs);
+        packet.putSFSArray(CmdDefine.ModuleCF.ID_ONLINES, idOnls);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_ACCOUNT_GLOBAL);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_CHAT_AND_FRIEND, packet, user);
+        this.send(this.module, packet, user);
+    }
+
+    private void HandleGetAccountGuild(User user, ISFSObject data) {
+        trace("____________________________ HandleGetAccountGuild ____________________________");
+
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        // === Thao tác database và room guild ===
+        int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(Integer.parseInt(user.getName())));
+
+        ArrayList<M_Account> lstAcc = C_Account.getByIdGuild(id_guild);
+        ISFSArray idOnls = new SFSArray();
+
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
+        List<User> lstUser = room.getUserList();
+        for (int i = 0; i < lstUser.size(); i++) idOnls.addInt(Integer.parseInt(lstUser.get(i).getName()));
+
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        ISFSArray accs = new SFSArray();
+        for(int i = 0; i < lstAcc.size(); i++){
+            accs.addSFSObject(lstAcc.get(i).parse());
+        }
+        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS, accs);
+
+        packet.putSFSArray(CmdDefine.ModuleCF.ID_ONLINES, idOnls);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_ACCOUNT_GUILD);
+        trace(packet.getDump());
+        this.send(this.module, packet, user);
+    }
+
+    private void HandleGetAccountFriend(User user, ISFSObject data) {
+        trace("____________________________ HandleGetAccountFriend ____________________________");
+
+        int id = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        // === Thao tác database và room global ===
+        ArrayList<M_Account> lstAcc = C_Account.getFriends(id);
+        ISFSArray idOnls = new SFSArray();
+
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        List<User> lstUser = room.getUserList();
+        for (int i = 0; i < lstUser.size(); i++) idOnls.addInt(Integer.parseInt(lstUser.get(i).getName()));
+
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        ISFSArray accs = new SFSArray();
+        for(int i = 0; i < lstAcc.size(); i++){
+            accs.addSFSObject(lstAcc.get(i).parse());
+        }
+        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS, accs);
+
+        packet.putSFSArray(CmdDefine.ModuleCF.ID_ONLINES, idOnls);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_ACCOUNT_FRIEND);
+        trace(packet.getDump());
+        this.send(this.module, packet, user);
     }
 
     private void HandleSendMessageGlobal(User user, ISFSObject data) {
@@ -129,7 +186,7 @@ public class HandlerCF extends BaseHandler {
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SEND_MESSAGE_GLOBAL);
         trace(packet.getDump());
 
-        this.send(CmdDefine.Module.MODULE_CHAT_AND_FRIEND, packet, lstUser);
+        this.send(this.module, packet, lstUser);
     }
 
     private void HandleSendMessageGuild(User user, ISFSObject data) {
@@ -159,68 +216,186 @@ public class HandlerCF extends BaseHandler {
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SEND_MESSAGE_GUILD);
         trace(packet.getDump());
 
-        this.send(CmdDefine.Module.MODULE_CHAT_AND_FRIEND, packet, lstUser);
+        this.send(this.module, packet, lstUser);
     }
 
-    private void HandleGetAccountGuild(User user, ISFSObject data) {
-        trace("____________________________ HandleGetAccountGuild ____________________________");
+    private void HandlerGetDetails(User user, ISFSObject data) {
+        trace("____________________________ HandlerGetDetails ____________________________");
 
+        int id_ac = Integer.parseInt(user.getName());
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
+        int id_get = data.getInt(CmdDefine.ModuleAccount.ID);
 
-        // === Thao tác database và room guild ===
-        ArrayList<M_Account> lstAccOnl = new ArrayList<>();
-        ArrayList<String> ids = new ArrayList<>();
-        ids.add(user.getName());
+        // === Thao tác database ===
+        // Lấy thông tin tài khoản
+        M_Account account = C_Account.get(id_get);
 
-        // Online
-        int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(Integer.parseInt(user.getName())));
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
-        List<User> lstUser = room.getUserList();
-        for (int i = 0; i < lstUser.size(); i++) {
-            if(!lstUser.get(i).getName().equals(user.getName())){
-                lstAccOnl.add(C_Account.get(Integer.parseInt(lstUser.get(i).getName())));
-                ids.add(lstUser.get(i).getName());
+        // Lấy danh sách nhân vật => active
+        ArrayList<M_Character> lstCharacter = C_Character.gets(id_get);
+        ArrayList<M_Character> characters = new ArrayList<>();
+        for (int i = 0; i < lstCharacter.size(); i++) {
+            if(lstCharacter.get(i).idx != -1){
+                characters.add(lstCharacter.get(i));
             }
         }
 
-        // Offline
-        ArrayList<M_Account> lstAccOff = new ArrayList<>();
-        boolean isEx = false;
-        ArrayList<M_Account> guildAcc = C_Account.getByIdGuild(id_guild);
-        for (int i = 0; i < guildAcc.size(); i++) {
-            for(int j = 0; j < ids.size(); j++){
-                if(Integer.parseInt(ids.get(j)) == guildAcc.get(i).id) {
-                    isEx = true;
-                    break;
-                }
-                isEx = false;
-            }
-            if(!isEx){
-                lstAccOff.add(guildAcc.get(i));
-                isEx = false;
-            }
+        // Lấy thông tin guild => id, name
+        M_Guild guild = null;
+        String keyGuild = C_Guild.getKey(id_get);
+        if(keyGuild != null){
+            int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, keyGuild);
+            guild = C_Guild.get(id_guild, false);
         }
+
+        // Kiểm tra mối quan hệ bạn bè
+        boolean isFriend = C_Account.checkFriend(id_ac, id_get);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        ISFSArray accOnls = new SFSArray();
-        for(int i = 0; i < lstAccOnl.size(); i++){
-            accOnls.addSFSObject(lstAccOnl.get(i).parse());
-        }
-        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS_ONLINE, accOnls);
+        packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
 
-        ISFSArray accOffs = new SFSArray();
-        for(int i = 0; i < lstAccOff.size(); i++){
-            accOffs.addSFSObject(lstAccOff.get(i).parse());
+        ISFSArray array = new SFSArray();
+        for(int i = 0; i < lstCharacter.size(); i++){
+            array.addSFSObject(lstCharacter.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS_OFFLINE, accOffs);
+        packet.putSFSArray(CmdDefine.ModuleAccount.CHARACTERS, array);
 
-        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_ACCOUNT_GUILD);
+        if(guild != null){
+            packet.putInt(CmdDefine.ModuleGuild.ID, guild.id);
+            packet.putUtfString(CmdDefine.ModuleGuild.NAME, guild.name);
+        }
+
+        packet.putBool(CmdDefine.ModuleCF.IS_FRIEND, isFriend);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_DETAILS);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_CHAT_AND_FRIEND, packet, user);
+        this.send(this.module, packet, user);
+    }
+
+    private void HandleMakeFriend(User user, ISFSObject data) {
+        trace("____________________________ HandleMakeFriend ____________________________");
+
+        int id = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+        int id_make = data.getInt(CmdDefine.ModuleAccount.ID);
+
+        // === Thao tác database ===
+        C_Account.insertFriends(id, id_make);
+        C_Account.insertFriends(id_make, id);
+
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.MAKE_FRIEND);
+        trace(packet.getDump());
+        this.send(this.module, packet, user);
+    }
+
+    private void HandleRemoveFriend(User user, ISFSObject data) {
+        trace("____________________________ HandleRemoveFriend ____________________________");
+
+        int id = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+        int id_make = data.getInt(CmdDefine.ModuleAccount.ID);
+
+        // === Thao tác database ===
+        C_Account.removeFriends(id, id_make);
+        C_Account.removeFriends(id_make, id);
+
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.REMOVE_FRIEND);
+        trace(packet.getDump());
+        this.send(this.module, packet, user);
+    }
+
+    private void HandleFindAccountGlobal(User user, ISFSObject data) {
+        trace("____________________________ HandleFindAccountGlobal ____________________________");
+
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+        boolean isCheckId = data.getBool(CmdDefine.ModuleCF.IS_CHECK_ID);
+        String content = data.getUtfString(CmdDefine.ModuleCF.CONTENT);
+
+        // === Thao tác database và room global ===
+        ArrayList<M_Account> lstAcc = new ArrayList<>();
+        if(isCheckId){
+            try {
+                lstAcc.add(C_Account.get(Integer.parseInt(content)));
+            }
+            catch (NumberFormatException exception){
+
+            }
+        }
+        else {
+            ArrayList<M_Account> allAcc = C_Account.getAll();
+            for (int i = 0; i < allAcc.size(); i++) {
+                if(allAcc.get(i).name.toUpperCase().startsWith(content.toUpperCase())){
+                    lstAcc.add(allAcc.get(i));
+                }
+            }
+        }
+
+        ISFSArray idOnls = new SFSArray();
+
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        List<User> lstUser = room.getUserList();
+        for (int i = 0; i < lstUser.size(); i++) idOnls.addInt(Integer.parseInt(lstUser.get(i).getName()));
+
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        ISFSArray accs = new SFSArray();
+        for(int i = 0; i < lstAcc.size(); i++){
+            accs.addSFSObject(lstAcc.get(i).parse());
+        }
+        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS, accs);
+
+        packet.putSFSArray(CmdDefine.ModuleCF.ID_ONLINES, idOnls);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.FIND_ACCOUNT_GLOBAL);
+        trace(packet.getDump());
+        this.send(this.module, packet, user);
+    }
+
+    private void HandleSendMessagePrivate(User user, ISFSObject data) {
+        trace("____________________________ HandleSendMessagePrivate ____________________________");
+
+        int id = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        String message = data.getUtfString(CmdDefine.ModuleCF.MESSAGE);
+        int id_rec = data.getInt(CmdDefine.ModuleAccount.ID);
+
+        // === Thao tác database và room global ===
+        M_Account account = C_Account.get(id);
+
+        // Kiểm tra người nhận online không
+        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        User rec = room.getUserByName(id_rec + "");
+
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        packet.putSFSObject(CmdDefine.ModuleCF.ACCOUNT, account.parse());
+        packet.putUtfString(CmdDefine.ModuleCF.MESSAGE, message);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SEND_MESSAGE_PRIVATE);
+        trace(packet.getDump());
+
+        this.send(this.module, packet, user);
+        if(rec != null) this.send(this.module, packet, rec);
     }
 
     @Override

@@ -17,6 +17,7 @@ public class RoomManage {
         roomSetting.setName(name);
         roomSetting.setGroupId(groupId);
         roomSetting.setMaxUsers(maxUser);
+        roomSetting.setGame(false);
 
         roomSetting.setDynamic(true);
         roomSetting.setAutoRemoveMode(SFSRoomRemoveMode.NEVER_REMOVE);
@@ -33,7 +34,7 @@ public class RoomManage {
     public static void userJoinRoom(SFSExtension sfsExtension, User user, Room room){
         System.out.println("________________________________________________________" + user.getName() + " join room: " + room.getName());
         try {
-            sfsExtension.getApi().joinRoom(user, room);
+            sfsExtension.getApi().joinRoom(user, room, null, false, null);
         } catch (SFSJoinRoomException e) {
             e.printStackTrace();
         }

@@ -12,7 +12,7 @@ import com.smartfoxserver.v2.entities.data.SFSObject;
 
 public class HandlerTickMilestone extends BaseHandler {
     public HandlerTickMilestone(BaseExtension extension) {
-        super(extension);
+        super(extension, CmdDefine.Module.MODULE_TICK_MILESTONE);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class HandlerTickMilestone extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.END_GAME);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_TICK_MILESTONE, packet, user);
+        this.send(this.module, packet, user);
     }
 
     @Override

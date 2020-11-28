@@ -3,11 +3,14 @@ package Controls;
 import Base.BaseControl;
 import Base.CouchBase;
 import Models.M_Account;
+import Util.C_Util;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
+import net.sf.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class C_Account extends BaseControl {
 
@@ -110,5 +113,61 @@ public class C_Account extends BaseControl {
             }
         }
         return result;
+    }
+
+    public static void insertFriends(int id_ac_A, int id_ac_B){
+        JsonObject obj = JsonObject.create();
+        JsonArray friends = JsonArray.create();
+        if(CouchBase.containKey("id_ac->friends::" + id_ac_A)){
+            friends = CouchBase.get("id_ac->friends::" + id_ac_A).getArray("keys");
+        }
+        friends.add(Module + "::" + id_ac_B);
+        obj.put("keys", friends);
+
+        CouchBase.set("id_ac->friends::" + id_ac_A, obj);
+    }
+
+    public static void removeFriends(int id_ac_A, int id_ac_B){
+        if(CouchBase.containKey("id_ac->friends::" + id_ac_A)){
+            JsonObject obj = JsonObject.create();
+            JsonArray friends = CouchBase.get("id_ac->friends::" + id_ac_A).getArray("keys");
+            int find = -1;
+            for (int i = 0; i < friends.size(); i++) {
+                if(friends.getString(i).equals(Module + "::" + id_ac_B)) {
+                    find = i;
+                    break;
+                }
+            }
+            if (find != -1) {
+                List<Object> lst = friends.toList();
+                lst.remove(find);
+                obj.put("keys", lst);
+                CouchBase.set("id_ac->friends::" + id_ac_A, obj);
+            }
+        }
+    }
+    
+    public static boolean checkFriend(int id_ac_A, int id_ac_B){
+        if(CouchBase.containKey("id_ac->friends::" + id_ac_A)){
+            JsonArray friends = CouchBase.get("id_ac->friends::" + id_ac_A).getArray("keys");
+            for (int i = 0; i < friends.size(); i++) {
+                String keyAc = friends.getString(i);
+                if(keyAc.equals(Module + "::" + id_ac_B)) return true;
+            }
+        }
+        return false;
+    }
+
+    public static ArrayList<M_Account> getFriends(int id){
+        ArrayList<M_Account> accounts = new ArrayList<>();
+        if(CouchBase.containKey("id_ac->friends::" + id)){
+            JsonArray arr = CouchBase.get("id_ac->friends::" + id).getArray("keys");
+            if(arr != null){
+                for(int i = 0; i < arr.size(); i++){
+                    accounts.add(getByKey((String) arr.get(i)));
+                }
+            }
+        }
+        return accounts;
     }
 }

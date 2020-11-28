@@ -12,7 +12,7 @@ import com.smartfoxserver.v2.entities.data.ISFSObject;
 public class HandlerZone extends BaseHandler {
 
     public HandlerZone(BaseExtension extension) {
-        super(extension);
+        super(extension, "");
     }
 
     @Override

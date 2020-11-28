@@ -9,7 +9,6 @@ import Models.M_Account;
 import Util.C_Util;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
-import com.smartfoxserver.v2.core.ISFSEventParam;
 import com.smartfoxserver.v2.core.SFSEventParam;
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.entities.Room;
@@ -22,7 +21,7 @@ import java.util.List;
 public class HandlerLogin extends BaseHandler {
 
     public HandlerLogin(BaseExtension extension) {
-        super(extension);
+        super(extension, "");
     }
 
     @Override

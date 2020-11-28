@@ -14,7 +14,7 @@ import com.smartfoxserver.v2.entities.data.SFSObject;
 
 public class HandlerCharacter extends BaseHandler {
     public HandlerCharacter(BaseExtension extension) {
-        super(extension);
+        super(extension, CmdDefine.Module.MODULE_CHARACTER);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class HandlerCharacter extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.ARRANGE);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_CHARACTER, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleUplevel(User user, ISFSObject data) {
@@ -68,7 +68,7 @@ public class HandlerCharacter extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.UPLEVEL);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_CHARACTER, packet, user);
+        this.send(this.module, packet, user);
     }
 
     @Override

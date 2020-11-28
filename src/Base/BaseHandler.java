@@ -10,10 +10,12 @@ import com.smartfoxserver.v2.extensions.IServerEventHandler;
 
 public abstract class BaseHandler extends BaseClientRequestHandler implements IServerEventHandler {
     protected BaseExtension extension;
+    protected String module;
 
-    public BaseHandler(BaseExtension extension) {
+    public BaseHandler(BaseExtension extension, String module) {
         super();
         this.extension = extension;
+        this.module = module;
         initHandlerClientRequest();
         initHandlerServerEvent();
     }

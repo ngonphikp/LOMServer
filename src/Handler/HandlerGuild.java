@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class HandlerGuild extends BaseHandler {
     public HandlerGuild(BaseExtension extension) {
-        super(extension);
+        super(extension, CmdDefine.Module.MODULE_GUILD);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class HandlerGuild extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.FIX_MASTER_GUILD);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandlePleaseGuild(User user, ISFSObject data) {
@@ -118,7 +118,7 @@ public class HandlerGuild extends BaseHandler {
         packet.putSFSObject(CmdDefine.ModuleGuild.GUILD, guild.parse());
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.PLEASE_GUILD);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleGetGuild(User user, ISFSObject data) {
@@ -138,7 +138,7 @@ public class HandlerGuild extends BaseHandler {
         packet.putSFSObject(CmdDefine.ModuleGuild.GUILD, guild.parse());
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_GUILD);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleGetNotiGuild(User user, ISFSObject data) {
@@ -158,7 +158,7 @@ public class HandlerGuild extends BaseHandler {
         packet.putUtfString(CmdDefine.ModuleGuild.NOTI, noti);
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_NOTI_GUILD);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleGetEventGuild(User user, ISFSObject data) {
@@ -184,7 +184,7 @@ public class HandlerGuild extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_EVENT_GUILD);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleGetMemberGuild(User user, ISFSObject data) {
@@ -209,7 +209,7 @@ public class HandlerGuild extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_MEMBER_GUID);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleFixNotiGuild(User user, ISFSObject data) {
@@ -233,7 +233,7 @@ public class HandlerGuild extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.FIX_NOTI_GUILD);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleGetGuilds(User user, ISFSObject data) {
@@ -257,7 +257,7 @@ public class HandlerGuild extends BaseHandler {
         packet.putSFSArray(CmdDefine.ModuleGuild.GUILDS, arr);
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_GUILDS);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleCreateGuild(User user, ISFSObject data) {
@@ -293,7 +293,7 @@ public class HandlerGuild extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.CREATE_GUILD);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     private void HandleOutGuild(User user, ISFSObject data) {
@@ -322,7 +322,7 @@ public class HandlerGuild extends BaseHandler {
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.OUT_GUILD);
         trace(packet.getDump());
-        this.send(CmdDefine.Module.MODULE_GUILD, packet, user);
+        this.send(this.module, packet, user);
     }
 
     @Override
