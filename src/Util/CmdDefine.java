@@ -50,6 +50,8 @@ public class CmdDefine {
         public static final short WRONG_USERNAME_OR_PASSWORD = 1;
         public static final short EXIT_ACCOUNT = 2;
         public static final short ACCOUNT_LOGON = 3;
+
+        public static final short UNFRIENDED = 4;
     }
 
     public static class Room{

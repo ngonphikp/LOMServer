@@ -379,6 +379,7 @@ public class HandlerCF extends BaseHandler {
 
         // === Thao tác database và room global ===
         M_Account account = C_Account.get(id);
+        boolean isFriend = C_Account.checkFriend(id, id_rec);
 
         // Kiểm tra người nhận online không
         Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
@@ -386,16 +387,21 @@ public class HandlerCF extends BaseHandler {
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
-        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+        if(isFriend){
+            packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        packet.putSFSObject(CmdDefine.ModuleCF.ACCOUNT, account.parse());
-        packet.putUtfString(CmdDefine.ModuleCF.MESSAGE, message);
+            packet.putSFSObject(CmdDefine.ModuleCF.ACCOUNT, account.parse());
+            packet.putUtfString(CmdDefine.ModuleCF.MESSAGE, message);
+        }
+        else {
+            packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.UNFRIENDED);
+        }
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SEND_MESSAGE_PRIVATE);
         trace(packet.getDump());
 
         this.send(this.module, packet, user);
-        if(rec != null) this.send(this.module, packet, rec);
+        if(rec != null && isFriend) this.send(this.module, packet, rec);
     }
 
     @Override
