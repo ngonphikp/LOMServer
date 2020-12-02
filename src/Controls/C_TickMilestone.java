@@ -17,7 +17,7 @@ public class C_TickMilestone extends BaseControl {
         if(CouchBase.containKey("id_ac->" + Module + "::" + id_ac)){
             JsonArray tick_milestones = CouchBase.get("id_ac->" + Module + "::" + id_ac).getArray("keys");
             for (int i = 0; i < tick_milestones.size(); i++){
-                result.add(get((String) tick_milestones.get(i)));
+                result.add(get(tick_milestones.getString(i)));
             }
         }
         return result;
@@ -43,17 +43,15 @@ public class C_TickMilestone extends BaseControl {
         }
         // Link id_ac
         {
-            {
-                JsonObject obj = JsonObject.create();
-                JsonArray tick_milestones = JsonArray.create();
-                if(CouchBase.containKey("id_ac->" + Module + "::" + id_ac)){
-                    tick_milestones = CouchBase.get("id_ac->" + Module + "::" + id_ac).getArray("keys");
-                }
-                tick_milestones.add(Module + "::" + id);
-                obj.put("keys", tick_milestones);
-
-                CouchBase.set("id_ac->" + Module + "::" + id_ac, obj);
+            JsonObject obj = JsonObject.create();
+            JsonArray tick_milestones = JsonArray.create();
+            if(CouchBase.containKey("id_ac->" + Module + "::" + id_ac)){
+                tick_milestones = CouchBase.get("id_ac->" + Module + "::" + id_ac).getArray("keys");
             }
+            tick_milestones.add(Module + "::" + id);
+            obj.put("keys", tick_milestones);
+
+            CouchBase.set("id_ac->" + Module + "::" + id_ac, obj);
         }
         // Update count
         updateCount(Module, id);

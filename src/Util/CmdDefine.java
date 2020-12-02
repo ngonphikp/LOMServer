@@ -43,6 +43,14 @@ public class CmdDefine {
         public static final int FIND_ACCOUNT_GLOBAL = 1027;
 
         public static final int SEND_MESSAGE_PRIVATE = 1028;
+
+        public static final int GET_BOSSES_GUILD = 1029;
+        public static final int GET_TICK_BOSS_GUILD = 1030;
+
+        public static final int UNLOCK_BOSS_GUILD = 1031;
+
+        public static final int END_GAME_BOSS_GUILD = 1032;
+        public static final int REWARD_BOSS_GUILD = 1033;
     }
 
     public static class ErrorCode{
@@ -67,6 +75,8 @@ public class CmdDefine {
         public static final String MODULE_GUILD = "guild";
         public static final String MODULE_EVENT_GUILD = "event_guild";
         public static final String MODULE_CHAT_AND_FRIEND = "chat_and_friend";
+        public static final String MODULE_BOSS_GUILD = "boss_guild";
+        public static final String MODULE_TICK_BOSS_GUILD = "tick_boss_guild";
     }
 
     public static class ModuleAccount{
@@ -127,6 +137,10 @@ public class CmdDefine {
         public static final String GUILDS = "guilds";
 
         public static final String EVENTS = "events";
+
+        public static final String BOSSES = "bosses";
+        public static final String BOSS = "boss";
+        public static final String TICK_BOSS = "tick_boss";
     }
 
     public static class ModuleEventGuild
@@ -150,5 +164,21 @@ public class CmdDefine {
 
         public static final String CONTENT = "content";
         public static final String IS_CHECK_ID = "is_check_id";
+    }
+
+    public static class ModuleBossGuild{
+        public static final String ID = "id_bg";
+        public static final String ID_BOSS = "id_boss";
+        public static final String CUR_HP = "current_hp";
+        public static final String STATUS = "status_bg";
+    }
+
+    public static class ModuleTickBossGuild{
+        public static final String ID = "id_tbg";
+
+        public static final String CUR_TURN = "current_turn";
+        public static final String IS_REWARD = "is_reward";
+
+        public static final String POINT = "point_tbg";
     }
 }
