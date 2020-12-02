@@ -3,6 +3,7 @@ package Handler;
 import Base.BaseExtension;
 import Base.BaseHandler;
 import Controls.C_Character;
+import Models.M_Character;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.core.SFSEventType;
@@ -39,7 +40,9 @@ public class HandlerCharacter extends BaseHandler {
         // === Thao tác database ===
         for(int i = 0; i < objs.size(); i++){
             ISFSObject obj = objs.getSFSObject(i);
-            C_Character.setIdx(obj.getInt(CmdDefine.ModuleCharacter.ID), obj.getInt(CmdDefine.ModuleCharacter.IDX));
+            M_Character character = C_Character.get(obj.getInt(CmdDefine.ModuleCharacter.ID));
+            character.idx = obj.getInt(CmdDefine.ModuleCharacter.IDX);
+            C_Character.set(character);
         }
 
         // === Gửi dữ liệu xuống ===
@@ -60,7 +63,9 @@ public class HandlerCharacter extends BaseHandler {
 
         // === Thao tác database ===
         // Up level nhân vật
-        C_Character.setLv(id, C_Character.get(id).lv + 1);
+        M_Character character = C_Character.get(id);
+        character.lv++;
+        C_Character.set(character);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();

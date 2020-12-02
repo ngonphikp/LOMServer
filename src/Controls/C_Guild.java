@@ -14,19 +14,14 @@ public class C_Guild extends BaseControl {
 
     private static String Module = CmdDefine.Module.MODULE_GUILD;
 
-    public static void setMaster(int id, int master){
-        if(CouchBase.containKey(Module + "::" + id)){
-            JsonObject obj = CouchBase.get(Module + "::" + id)
-                    .put(CmdDefine.ModuleGuild.MASTER, master);
-            CouchBase.set(Module + "::" + id, obj);
-        }
-    }
-
-    public static void setNoti(int id, String noti){
-        if(CouchBase.containKey(Module + "::" + id)){
-            JsonObject obj = CouchBase.get(Module + "::" + id)
-                    .put(CmdDefine.ModuleGuild.NOTI, noti);
-            CouchBase.set(Module + "::" + id, obj);
+    public static void set(M_Guild data){
+        if(CouchBase.containKey(Module + "::" + data.id)){
+            JsonObject obj = CouchBase.get(Module + "::" + data.id)
+                    .put(CmdDefine.ModuleGuild.NAME, data.name)
+                    .put(CmdDefine.ModuleGuild.MASTER, data.master)
+                    .put(CmdDefine.ModuleGuild.LV, data.lv)
+                    .put(CmdDefine.ModuleGuild.NOTI, data.noti);
+            CouchBase.set(Module + "::" + data.id, obj);
         }
     }
 

@@ -2,7 +2,6 @@ package Controls;
 
 import Base.BaseControl;
 import Base.CouchBase;
-import Models.M_Character;
 import Models.M_TickBossGuild;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;

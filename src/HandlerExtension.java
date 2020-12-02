@@ -18,7 +18,7 @@ public class HandlerExtension extends BaseExtension {
         new HandlerLogin(this);
         new HandlerAccount(this);
         new HandlerCharacter(this);
-        new HandlerTickMilestone(this);
+        new HandlerCampain(this);
         new HandlerGuild(this);
         new HandlerCF(this);
     }

@@ -37,20 +37,7 @@ public abstract class BaseExtension extends SFSExtension {
     public void init() {
         initModule();
     }
-
-    //Add event handler vao map (key: handlerType -> value: handler)
     public final void addServerHandler(String handlerType, IServerEventHandler handler) {
         handlers.put(handlerType, handler);
     }
-
-//    //Xoa event handler voi handlerType trong map (key: handlerType -> value: handler)
-//    public final void removeServerHandler(String handlerType) {
-//        if (handlers.containsKey(handlerType))
-//            handlers.remove(handlerType);
-//    }
-//
-//    //Lay event handler voi handlerTyle trong map (key: handlerType -> value: handler)
-//    public final IServerEventHandler getServerHandler(String handlerType) {
-//        return handlers.get(handlerType);
-//    }
 }

@@ -2,18 +2,26 @@ package Controls;
 
 import Base.BaseControl;
 import Base.CouchBase;
-import Models.M_TickMilestone;
+import Models.M_TickCampain;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
 
 import java.util.ArrayList;
 
-public class C_TickMilestone extends BaseControl {
-    private static String Module = CmdDefine.Module.MODULE_TICK_MILESTONE;
+public class C_TickCampain extends BaseControl {
+    private static String Module = CmdDefine.Module.MODULE_TICK_CAMPAIN;
 
-    public static ArrayList<M_TickMilestone> gets(int id_ac){
-        ArrayList<M_TickMilestone> result = new ArrayList<>();
+    public static void set(M_TickCampain data){
+        JsonObject obj = CouchBase.get(Module + "::" + data.id)
+                .put(CmdDefine.ModuleTickCampain.ID_AC, data.id_ac)
+                .put(CmdDefine.ModuleTickCampain.ID_ML, data.id_ml)
+                .put(CmdDefine.ModuleTickCampain.STAR, data.star);
+        CouchBase.set(Module + "::" + data.id, obj);
+    }
+
+    public static ArrayList<M_TickCampain> gets(int id_ac){
+        ArrayList<M_TickCampain> result = new ArrayList<>();
         if(CouchBase.containKey("id_ac->" + Module + "::" + id_ac)){
             JsonArray tick_milestones = CouchBase.get("id_ac->" + Module + "::" + id_ac).getArray("keys");
             for (int i = 0; i < tick_milestones.size(); i++){
@@ -23,16 +31,16 @@ public class C_TickMilestone extends BaseControl {
         return result;
     }
 
-    private static void insert(int id_ac, int id_ml, int star){
+    public static int insert(int id_ac, int id_ml, int star){
         // Get Count
         int id = getCount(Module) + 1;
         // Create Tick Milestone
         {
             JsonObject obj = JsonObject.create()
-                    .put(CmdDefine.ModuleTickMilestone.ID, id)
-                    .put(CmdDefine.ModuleTickMilestone.ID_AC, id_ac)
-                    .put(CmdDefine.ModuleTickMilestone.ID_ML, id_ml)
-                    .put(CmdDefine.ModuleTickMilestone.STAR, star);
+                    .put(CmdDefine.ModuleTickCampain.ID, id)
+                    .put(CmdDefine.ModuleTickCampain.ID_AC, id_ac)
+                    .put(CmdDefine.ModuleTickCampain.ID_ML, id_ml)
+                    .put(CmdDefine.ModuleTickCampain.STAR, star);
             CouchBase.set(Module + "::" + id, obj);
         }
         // Link id_ac&id_ml
@@ -55,29 +63,23 @@ public class C_TickMilestone extends BaseControl {
         }
         // Update count
         updateCount(Module, id);
+
+        return id;
     }
 
-    public static void setStar(int id_ac, int id_ml, int star){
+    public static M_TickCampain get(int id_ac, int id_ml){
         if(CouchBase.containKey("id_ac&id_ml->" + Module + "::" + id_ac + "&" + id_ml)){
             String key = CouchBase.get("id_ac&id_ml->" + Module + "::" + id_ac + "&" + id_ml).getString("key");
-            setStar(key, star);
+            return get(key);
         }
-        else {
-            insert(id_ac, id_ml, star);
-        }
+        return null;
     }
 
-    private static void setStar(String key, int star){
-        JsonObject obj = CouchBase.get(key)
-                .put(CmdDefine.ModuleTickMilestone.STAR, star);
-        CouchBase.set(key, obj);
+    private static M_TickCampain get(String key){
+        return (CouchBase.containKey(key)) ? new M_TickCampain(CouchBase.get(key)) : null;
     }
 
-    private static M_TickMilestone get(String key){
-        return (CouchBase.containKey(key)) ? new M_TickMilestone(CouchBase.get(key)) : null;
-    }
-
-    public static M_TickMilestone get(int id){
+    public static M_TickCampain get(int id){
         return get(Module + "::" + id);
     }
 }

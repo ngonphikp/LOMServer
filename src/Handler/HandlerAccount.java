@@ -6,9 +6,8 @@ import Base.RoomManage;
 import Controls.C_Account;
 import Controls.C_Character;
 import Controls.C_Guild;
-import Controls.C_TickMilestone;
+import Models.M_Account;
 import Models.M_Character;
-import Models.M_TickMilestone;
 import Util.C_Util;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
@@ -77,9 +76,6 @@ public class HandlerAccount extends BaseHandler {
         // Lấy danh sách nhân vật
         ArrayList<M_Character> lstCharacter = C_Character.gets(id);
 
-        // Lấy lịch sử phó bản
-        ArrayList<M_TickMilestone> lstTick_milestone = C_TickMilestone.gets(id);
-
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
@@ -91,12 +87,6 @@ public class HandlerAccount extends BaseHandler {
             characters.addSFSObject(lstCharacter.get(i).parse());
         }
         packet.putSFSArray(CmdDefine.ModuleAccount.CHARACTERS, characters);
-
-        ISFSArray tick_milestones = new SFSArray();
-        for(int i = 0; i < lstTick_milestone.size(); i++){
-            tick_milestones.addSFSObject(lstTick_milestone.get(i).parse());
-        }
-        packet.putSFSArray(CmdDefine.ModuleAccount.TICK_MILESTONES, tick_milestones);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_INFO);
         trace(packet.getDump());
@@ -115,7 +105,9 @@ public class HandlerAccount extends BaseHandler {
 
         // === Thao tác database ===
         // Thay đổi tên tài khoản
-        C_Account.setName(id, name);
+        M_Account account = C_Account.get(id);
+        account.name = name;
+        C_Account.set(account);
         // Thêm nhân vật
         C_Character.insert(id, id_cfg, 1, 4);
         // Lấy lại danh sách nhân vật

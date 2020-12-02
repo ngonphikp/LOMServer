@@ -7,7 +7,6 @@ import Controls.*;
 import Models.*;
 import Util.C_Util;
 import Util.CmdDefine;
-import com.couchbase.client.java.document.json.JsonArray;
 import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.core.SFSEventType;
 import com.smartfoxserver.v2.entities.Room;
@@ -88,7 +87,9 @@ public class HandlerGuild extends BaseHandler {
         int master = data.getInt(CmdDefine.ModuleGuild.MASTER);
 
         // === Thao tác database ===
-        C_Guild.setMaster(id_guild, master);
+        M_Guild guild = C_Guild.get(id_guild, false);
+        guild.master = master;
+        C_Guild.set(guild);
 
         C_EventGuild.insert("Hội trưởng: " + C_Account.get(id_ac).name + " nhường chức cho " + C_Account.get(master).name, id_guild);
 
@@ -112,7 +113,11 @@ public class HandlerGuild extends BaseHandler {
 
         // === Thao tác database ===
         C_Guild.insertAccount(id_guild, id_ac);
-        C_Account.setJob(id_ac, 0, true);
+        M_Account account = C_Account.get(id_ac);
+        account.job = 0;
+        account.dediTotal = 0;
+        account.dediWeek = 0;
+        C_Account.set(account);
         M_Guild guild = C_Guild.get(id_guild, true);
 
         C_EventGuild.insert(C_Account.get(id_ac).name + " Gia nhập hội !", id_guild);
@@ -246,7 +251,9 @@ public class HandlerGuild extends BaseHandler {
         String noti = data.getUtfString(CmdDefine.ModuleGuild.NOTI);
 
         // === Thao tác database ===
-        C_Guild.setNoti(id_guild, noti);
+        M_Guild guild = C_Guild.get(id_guild, false);
+        guild.noti = noti;
+        C_Guild.set(guild);
 
         C_EventGuild.insert(C_Account.get(id_ac).name + " Sửa thông báo !", id_guild);
 
@@ -296,7 +303,11 @@ public class HandlerGuild extends BaseHandler {
         // Thêm guild
         int id = C_Guild.insert(name, master);
         // Thay đổi chức vụ
-        C_Account.setJob(master, 1, true);
+        M_Account account = C_Account.get(master);
+        account.job = 1;
+        account.dediTotal = 0;
+        account.dediWeek = 0;
+        C_Account.set(account);
         // Lấy lại thông tin guild
         M_Guild guild = C_Guild.get(id, true);
 
@@ -330,7 +341,11 @@ public class HandlerGuild extends BaseHandler {
         int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id_ac));
 
         // === Thao tác database ===
-        C_Account.setJob(id_ac, -1, true);
+        M_Account account = C_Account.get(id_ac);
+        account.job = -1;
+        account.dediWeek = 0;
+        account.dediTotal = 0;
+        C_Account.set(account);
         C_Guild.deleteAccount(id_guild, id_ac);
 
         C_EventGuild.insert(C_Account.get(id_ac).name + " Thoát hội !", id_guild);

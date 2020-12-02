@@ -13,25 +13,13 @@ public class C_Character extends BaseControl {
 
     private static String Module = CmdDefine.Module.MODULE_CHARACTER;
 
-    public static void setLv(int id, int lv){
-        if(CouchBase.containKey(Module + "::" + id)){
-            JsonObject obj = CouchBase.get(Module + "::" + id)
-                    .put(CmdDefine.ModuleCharacter.LV, lv);
-            CouchBase.set(Module + "::" + id, obj);
-        }
-        else {
-            System.out.println("Không tồn tại tài khoản: " + id);
-        }
-    }
-
-    public static void setIdx(int id, int idx){
-        if(CouchBase.containKey(Module + "::" + id)){
-            JsonObject obj = CouchBase.get(Module + "::" + id)
-                    .put(CmdDefine.ModuleCharacter.IDX, idx);
-            CouchBase.set(Module + "::" + id, obj);
-        }
-        else {
-            System.out.println("Không tồn tại tài khoản: " + id);
+    public static void set(M_Character data){
+        if(CouchBase.containKey(Module + "::" + data.id)){
+            JsonObject obj = CouchBase.get(Module + "::" + data.id)
+                    .put(CmdDefine.ModuleCharacter.ID_CFG, data.id_cfg)
+                    .put(CmdDefine.ModuleCharacter.LV, data.lv)
+                    .put(CmdDefine.ModuleCharacter.IDX, data.idx);
+            CouchBase.set(Module + "::" + data.id, obj);
         }
     }
 

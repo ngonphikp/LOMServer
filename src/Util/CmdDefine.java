@@ -18,7 +18,7 @@ public class CmdDefine {
 
         public static final int UPLEVEL = 1007;
 
-        public static final int END_GAME = 1008;
+        public static final int END_GAME_CAMPAIN = 1008;
 
         public static final int GET_GUILDS = 1009;
         public static final int CREATE_GUILD = 1010;
@@ -71,7 +71,8 @@ public class CmdDefine {
     public static class Module{
         public static final String MODULE_ACCOUNT = "account";
         public static final String MODULE_CHARACTER = "character";
-        public static final String MODULE_TICK_MILESTONE = "tick_milestone";
+        public static final String MODULE_CAMPAIN = "campain";
+        public static final String MODULE_TICK_CAMPAIN = "tick_campain";
         public static final String MODULE_GUILD = "guild";
         public static final String MODULE_EVENT_GUILD = "event_guild";
         public static final String MODULE_CHAT_AND_FRIEND = "chat_and_friend";
@@ -100,8 +101,6 @@ public class CmdDefine {
 
         public static final String CHARACTERS = "characters";
 
-        public static final String TICK_MILESTONES = "tick_milestones";
-
         public static final String TYPE_TAVERN = "type_tavern";
         public static final String CHARACTER = "character";
     }
@@ -113,7 +112,7 @@ public class CmdDefine {
         public static final String IDX = "idx_char";
     }
 
-    public static class ModuleTickMilestone{
+    public static class ModuleTickCampain{
         public static final String ID = "id_tms";
         public static final String STAR = "star_tms";
         public static final String ID_AC = "id_ac";
