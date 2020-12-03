@@ -123,12 +123,13 @@ public class HandlerGuild extends BaseHandler {
         C_EventGuild.insert(C_Account.get(id_ac).name + " Gia nhập hội !", id_guild);
 
         // === Thao tác với room Guild
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + guild.id);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom("GD" + guild.id);
         if(room == null){
-            RoomManage.initRoom(this.extension, CmdDefine.Room.Guild + guild.id, CmdDefine.Room.Guild, 50);
-            room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + guild.id);
+            manage.initRoom("HandlerExtension", "GD" + guild.id, CmdDefine.Room.Guild, 50);
+            room = manage.getRoom("GD" + guild.id);
         }
-        RoomManage.userJoinRoom(this.extension, user, room);
+        manage.userJoinRoom(user, room);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -315,10 +316,11 @@ public class HandlerGuild extends BaseHandler {
 
         // === Thao tác room guild
         // Tạo room guild + id
-        RoomManage.initRoom(this.extension, CmdDefine.Room.Guild + guild.id, CmdDefine.Room.Guild, 50);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        manage.initRoom("HandlerExtension", "GD" + guild.id, CmdDefine.Room.Guild, 50);
         // User join room
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + guild.id);
-        RoomManage.userJoinRoom(this.extension, user, room);
+        Room room = manage.getRoom("GD" + guild.id);
+        manage.userJoinRoom(user, room);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -352,8 +354,9 @@ public class HandlerGuild extends BaseHandler {
 
         // === Thao tác room guild
         // User out room
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
-        RoomManage.userOutRoom(user, room);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom("GD" + id_guild);
+        manage.userOutRoom(user, room);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();

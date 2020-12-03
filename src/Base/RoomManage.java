@@ -9,9 +9,14 @@ import com.smartfoxserver.v2.exceptions.SFSJoinRoomException;
 import com.smartfoxserver.v2.extensions.SFSExtension;
 
 public class RoomManage {
+    private SFSExtension extension;
 
-    public static void initRoom(SFSExtension sfsExtension, String name, String groupId, int maxUser){
-        System.out.println("________________________________________________________Int room: " + name + " (" + groupId + " )");
+    public RoomManage(SFSExtension extension){
+        this.extension = extension;
+    }
+
+    public void initRoom(String className, String name, String groupId, int maxUser){
+        System.out.println("________________________________________________________Room int: " + name + " (" + groupId + " )");
         CreateRoomSettings roomSetting = new CreateRoomSettings();
 
         roomSetting.setName(name);
@@ -22,31 +27,35 @@ public class RoomManage {
         roomSetting.setDynamic(true);
         roomSetting.setAutoRemoveMode(SFSRoomRemoveMode.NEVER_REMOVE);
 
-        roomSetting.setExtension(new CreateRoomSettings.RoomExtensionSettings("LOM","Base.RoomExtension"));
+        roomSetting.setExtension(new CreateRoomSettings.RoomExtensionSettings("LOM", className));
 
         try {
-            sfsExtension.getApi().createRoom(sfsExtension.getParentZone(), roomSetting, null, true, null);
+            extension.getApi().createRoom(extension.getParentZone(), roomSetting, null, true, null);
         } catch (SFSCreateRoomException e) {
             e.printStackTrace();
         }
     }
 
-    public static void userJoinRoom(SFSExtension sfsExtension, User user, Room room){
-        System.out.println("________________________________________________________" + user.getName() + " join room: " + room.getName());
+    public Room getRoom(String name){
+         return extension.getParentZone().getRoomByName(name);
+    }
+
+    public void userJoinRoom(User user, Room room){
+        System.out.println("________________________________________________________Room join: " + user.getName() + " => " + room.getName());
         try {
-            sfsExtension.getApi().joinRoom(user, room, null, false, null);
+            extension.getApi().joinRoom(user, room, null, false, null);
         } catch (SFSJoinRoomException e) {
             e.printStackTrace();
         }
     }
 
-    public static void userOutRoom(User user, Room room){
-        System.out.println("________________________________________________________" + user.getName() + " out room: " + room.getName());
+    public void userOutRoom(User user, Room room){
+        System.out.println("________________________________________________________Room out: " + user.getName() + " => " + room.getName());
         room.removeUser(user);
     }
 
-    public static  void removeRoom(SFSExtension sfsExtension, Room room){
-        System.out.println("________________________________________________________Remove room: " + room.getName());
-        sfsExtension.getApi().removeRoom(room);
+    public  void removeRoom(Room room){
+        System.out.println("________________________________________________________Room remove: " + room.getName());
+        extension.getApi().removeRoom(room);
     }
 }

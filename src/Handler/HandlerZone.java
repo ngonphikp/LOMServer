@@ -47,8 +47,8 @@ public class HandlerZone extends BaseHandler {
 
     public void OnServerReady(ISFSEvent event){
         trace("____________________________ OnServerReady ____________________________");
-
-        RoomManage.initRoom(this.extension, CmdDefine.Room.Global, CmdDefine.Room.Global, 10000);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        manage.initRoom("HandlerExtension", CmdDefine.Room.Global, CmdDefine.Room.Global, 10000);
     }
 
     @Override
@@ -60,7 +60,6 @@ public class HandlerZone extends BaseHandler {
     protected void initHandlerServerEvent() {
         this.extension.addEventHandler(SFSEventType.USER_JOIN_ZONE, this);
         this.extension.addEventHandler(SFSEventType.USER_DISCONNECT, this);
-
         this.extension.addEventHandler(SFSEventType.SERVER_READY, this);
     }
 }

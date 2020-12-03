@@ -81,7 +81,8 @@ public class HandlerLogin extends BaseHandler {
 
             // === Thao tác room global ===
             // Lấy list user Online
-            Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+            RoomManage manage = new RoomManage(this.getParentExtension());
+            Room room = manage.getRoom(CmdDefine.Room.Global);
             List<User> lstUser = room.getUserList();
             boolean isOnl = false;
             for (int i = 0; i < lstUser.size(); i++) {
@@ -151,18 +152,19 @@ public class HandlerLogin extends BaseHandler {
         trace("____________________________ OnUserLogout ____________________________");
 
         // === Thao tác với room global
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom(CmdDefine.Room.Global);
         User user = (User) event.getParameter(SFSEventParam.USER);
-        RoomManage.userOutRoom(user, room);
+        manage.userOutRoom(user, room);
 
         // === Thao tác với room guild
         String keyGuild = C_Guild.getKey(Integer.parseInt(user.getName()));
         if(keyGuild != null){
             int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, keyGuild);
-            Room roomG = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
-            RoomManage.userOutRoom(user, roomG);
+            Room roomG = manage.getRoom("GD" + id_guild);
+            manage.userOutRoom(user, roomG);
 
-            if(roomG.getUserList().size() == 0) RoomManage.removeRoom(this.getParentExtension(), roomG);
+            if(roomG.getUserList().size() == 0) manage.removeRoom(roomG);
         }
     }
 

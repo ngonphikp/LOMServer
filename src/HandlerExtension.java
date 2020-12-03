@@ -1,5 +1,6 @@
 import Base.BaseExtension;
 import Base.CouchBase;
+import Base.QueueManage;
 import Handler.*;
 
 public class HandlerExtension extends BaseExtension {
@@ -10,6 +11,7 @@ public class HandlerExtension extends BaseExtension {
         super.init();
 
         CouchBase.init();
+        QueueManage.init(this);
     }
 
     @Override
@@ -18,8 +20,9 @@ public class HandlerExtension extends BaseExtension {
         new HandlerLogin(this);
         new HandlerAccount(this);
         new HandlerCharacter(this);
-        new HandlerCampain(this);
+        new HandlerCampaign(this);
         new HandlerGuild(this);
         new HandlerCF(this);
+        new HandlerPvP(this);
     }
 }

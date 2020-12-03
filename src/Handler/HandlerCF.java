@@ -6,6 +6,7 @@ import Base.BaseHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import Base.RoomManage;
 import Controls.C_Account;
 import Controls.C_Character;
 import Controls.C_Guild;
@@ -74,7 +75,8 @@ public class HandlerCF extends BaseHandler {
         ArrayList<M_Account> lstAcc = C_Account.getAll();
         ISFSArray idOnls = new SFSArray();
 
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom(CmdDefine.Room.Global);
         List<User> lstUser = room.getUserList();
         for (int i = 0; i < lstUser.size(); i++) idOnls.addInt(Integer.parseInt(lstUser.get(i).getName()));
 
@@ -107,7 +109,8 @@ public class HandlerCF extends BaseHandler {
         ArrayList<M_Account> lstAcc = C_Account.getByIdGuild(id_guild);
         ISFSArray idOnls = new SFSArray();
 
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom("GD" + id_guild);
         List<User> lstUser = room.getUserList();
         for (int i = 0; i < lstUser.size(); i++) idOnls.addInt(Integer.parseInt(lstUser.get(i).getName()));
 
@@ -139,7 +142,8 @@ public class HandlerCF extends BaseHandler {
         ArrayList<M_Account> lstAcc = C_Account.getFriends(id);
         ISFSArray idOnls = new SFSArray();
 
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom(CmdDefine.Room.Global);
         List<User> lstUser = room.getUserList();
         for (int i = 0; i < lstUser.size(); i++) idOnls.addInt(Integer.parseInt(lstUser.get(i).getName()));
 
@@ -173,7 +177,8 @@ public class HandlerCF extends BaseHandler {
         M_Account account = C_Account.get(id);
 
         // Lấy list user Online
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom(CmdDefine.Room.Global);
         List<User> lstUser = room.getUserList();
 
         // === Gửi dữ liệu xuống ===
@@ -203,7 +208,8 @@ public class HandlerCF extends BaseHandler {
         int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id));
 
         // Lấy list user Online
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Guild + id_guild);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom("GD" + id_guild);
         List<User> lstUser = room.getUserList();
 
         // === Gửi dữ liệu xuống ===
@@ -258,8 +264,8 @@ public class HandlerCF extends BaseHandler {
         packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
 
         ISFSArray array = new SFSArray();
-        for(int i = 0; i < lstCharacter.size(); i++){
-            array.addSFSObject(lstCharacter.get(i).parse());
+        for(int i = 0; i < characters.size(); i++){
+            array.addSFSObject(characters.get(i).parse());
         }
         packet.putSFSArray(CmdDefine.ModuleAccount.CHARACTERS, array);
 
@@ -346,7 +352,8 @@ public class HandlerCF extends BaseHandler {
 
         ISFSArray idOnls = new SFSArray();
 
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom(CmdDefine.Room.Global);
         List<User> lstUser = room.getUserList();
         for (int i = 0; i < lstUser.size(); i++) idOnls.addInt(Integer.parseInt(lstUser.get(i).getName()));
 
@@ -382,7 +389,8 @@ public class HandlerCF extends BaseHandler {
         boolean isFriend = C_Account.checkFriend(id, id_rec);
 
         // Kiểm tra người nhận online không
-        Room room = this.getParentExtension().getParentZone().getRoomByName(CmdDefine.Room.Global);
+        RoomManage manage = new RoomManage(this.getParentExtension());
+        Room room = manage.getRoom(CmdDefine.Room.Global);
         User rec = room.getUserByName(id_rec + "");
 
         // === Gửi dữ liệu xuống ===

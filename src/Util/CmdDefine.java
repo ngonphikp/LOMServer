@@ -8,49 +8,47 @@ public class CmdDefine {
         public static final int REGISTER = 1001;
         public static final int LOGIN = 1002;
 
-        public static final int GET_INFO = 1003;
+        public static final int GET_INFO = 2001;
+        public static final int SELECTION = 2002;
+        public static final int TAVERN = 2003;
 
-        public static final int SELECTION = 1004;
+        public static final int ARRANGE = 3001;
+        public static final int UPLEVEL = 3002;
 
-        public static final int ARRANGE = 1005;
+        public static final int GET_TICKS_CAMPAIGN = 4001;
+        public static final int END_GAME_CAMPAIGN = 4002;
 
-        public static final int TAVERN = 1006;
+        public static final int GET_GUILDS = 5001;
+        public static final int CREATE_GUILD = 5002;
+        public static final int GET_GUILD = 5003;
+        public static final int OUT_GUILD = 5004;
+        public static final int PLEASE_GUILD = 5005;
+        public static final int FIX_MASTER_GUILD = 5006;
+        public static final int GET_NOTI_GUILD = 5007;
+        public static final int GET_EVENT_GUILD = 5008;
+        public static final int GET_MEMBER_GUID = 5009;
+        public static final int FIX_NOTI_GUILD = 5010;
+        public static final int GET_BOSSES_GUILD = 5011;
+        public static final int GET_TICK_BOSS_GUILD = 5012;
+        public static final int UNLOCK_BOSS_GUILD = 5013;
+        public static final int END_GAME_BOSS_GUILD = 5014;
+        public static final int REWARD_BOSS_GUILD = 5015;
 
-        public static final int UPLEVEL = 1007;
+        public static final int GET_ACCOUNT_GLOBAL = 6001;
+        public static final int SEND_MESSAGE_GLOBAL = 6002;
+        public static final int GET_ACCOUNT_GUILD = 6003;
+        public static final int SEND_MESSAGE_GUILD = 6004;
+        public static final int GET_DETAILS = 6005;
+        public static final int MAKE_FRIEND = 6006;
+        public static final int REMOVE_FRIEND = 6007;
+        public static final int GET_ACCOUNT_FRIEND = 6008;
+        public static final int FIND_ACCOUNT_GLOBAL = 6009;
+        public static final int SEND_MESSAGE_PRIVATE = 6010;
 
-        public static final int END_GAME_CAMPAIN = 1008;
+        public static final int START_PVP = 7001;
+        public static final int CANCLE_PVP = 7002;
 
-        public static final int GET_GUILDS = 1009;
-        public static final int CREATE_GUILD = 1010;
-        public static final int GET_GUILD = 1011;
-        public static final int OUT_GUILD = 1012;
-        public static final int PLEASE_GUILD = 1013;
-        public static final int FIX_MASTER_GUILD = 1014;
-        public static final int GET_NOTI_GUILD = 1015;
-        public static final int GET_EVENT_GUILD = 1016;
-        public static final int GET_MEMBER_GUID = 1017;
-        public static final int FIX_NOTI_GUILD = 1018;
-
-        public static final int GET_ACCOUNT_GLOBAL = 1019;
-        public static final int SEND_MESSAGE_GLOBAL = 1020;
-        public static final int GET_ACCOUNT_GUILD = 1021;
-        public static final int SEND_MESSAGE_GUILD = 1022;
-
-        public static final int GET_DETAILS = 1023;
-        public static final int MAKE_FRIEND = 1024;
-        public static final int REMOVE_FRIEND = 1025;
-        public static final int GET_ACCOUNT_FRIEND = 1026;
-        public static final int FIND_ACCOUNT_GLOBAL = 1027;
-
-        public static final int SEND_MESSAGE_PRIVATE = 1028;
-
-        public static final int GET_BOSSES_GUILD = 1029;
-        public static final int GET_TICK_BOSS_GUILD = 1030;
-
-        public static final int UNLOCK_BOSS_GUILD = 1031;
-
-        public static final int END_GAME_BOSS_GUILD = 1032;
-        public static final int REWARD_BOSS_GUILD = 1033;
+        public static final int JOIN_ROOM_GAME = 8001;
     }
 
     public static class ErrorCode{
@@ -71,13 +69,15 @@ public class CmdDefine {
     public static class Module{
         public static final String MODULE_ACCOUNT = "account";
         public static final String MODULE_CHARACTER = "character";
-        public static final String MODULE_CAMPAIN = "campain";
-        public static final String MODULE_TICK_CAMPAIN = "tick_campain";
+        public static final String MODULE_CAMPAIGN = "campaign";
+        public static final String MODULE_TICK_CAMPAIGN = "tick_campaign";
         public static final String MODULE_GUILD = "guild";
         public static final String MODULE_EVENT_GUILD = "event_guild";
         public static final String MODULE_CHAT_AND_FRIEND = "chat_and_friend";
         public static final String MODULE_BOSS_GUILD = "boss_guild";
         public static final String MODULE_TICK_BOSS_GUILD = "tick_boss_guild";
+        public static final String MODULE_PVP = "PvP";
+        public static final String MODULE_GAME = "Game";
     }
 
     public static class ModuleAccount{
@@ -112,13 +112,12 @@ public class CmdDefine {
         public static final String IDX = "idx_char";
     }
 
-    public static class ModuleTickCampain{
-        public static final String ID = "id_tms";
-        public static final String STAR = "star_tms";
-        public static final String ID_AC = "id_ac";
-        public static final String ID_ML = "id_ml";
+    public static class ModuleTickCampaign{
+        public static final String ID = "id_tc";
+        public static final String STAR = "star_tc";
+        public static final String ID_CAMPAIGN = "id_campaign";
 
-        public static final String IS_SAVE = "is_save";
+        public static final String TICKS = "ticks";
     }
 
     public static class ModuleGuild
@@ -179,5 +178,11 @@ public class CmdDefine {
         public static final String IS_REWARD = "is_reward";
 
         public static final String POINT = "point_tbg";
+    }
+
+    public static class ModuleGame{
+        public static final String LIST = "list";
+        public static final String ACCOUNTS = "accounts";
+        public static final String CHARACTERS = "characters";
     }
 }
