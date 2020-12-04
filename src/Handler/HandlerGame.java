@@ -25,6 +25,7 @@ import java.util.Map;
 public class HandlerGame extends BaseHandler {
     public List<User> listUser = new ArrayList<>();
     public Map<Integer, List<M_Character>> mapArrange = new HashMap<>();
+    public int countScenario = 0;
 
     public HandlerGame(BaseExtension extension) {
         super(extension, CmdDefine.Module.MODULE_GAME);
@@ -48,6 +49,9 @@ public class HandlerGame extends BaseHandler {
             case CmdDefine.CMD.LOCK_ARRANGE:
                 HandleLock(user, data);
                 break;
+            case CmdDefine.CMD.SEND_SCENARIO:
+                HandleScenario(user, data);
+                break;
         }
     }
 
@@ -60,6 +64,17 @@ public class HandlerGame extends BaseHandler {
             case USER_DISCONNECT:
                 HandleDisconnectGame(type, event);
                 break;
+        }
+    }
+
+    private void HandleScenario(User user, ISFSObject data) {
+        trace("____________________________ HandleScenario ____________________________");
+        trace(data.getDump());
+        countScenario++;
+        if(countScenario > 1){
+            data.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+            data.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SEND_SCENARIO);
+            this.send(this.module, data, extension.getParentRoom().getUserList());
         }
     }
 

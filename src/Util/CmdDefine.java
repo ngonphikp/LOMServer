@@ -55,6 +55,7 @@ public class CmdDefine {
         public static final int CHANGE_CHAR = 8005;
         public static final int LOCK_ARRANGE = 8006;
         public static final int START_GAME = 8007;
+        public static final int SEND_SCENARIO = 8008;
     }
 
     public static class ErrorCode{
