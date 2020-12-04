@@ -49,6 +49,12 @@ public class CmdDefine {
         public static final int CANCLE_PVP = 7002;
 
         public static final int JOIN_ROOM_GAME = 8001;
+        public static final int OUT_ROOM_GAME = 8002;
+        public static final int UN_ACTIVE_CHAR = 8003;
+        public static final int ACTIVE_CHAR = 8004;
+        public static final int CHANGE_CHAR = 8005;
+        public static final int LOCK_ARRANGE = 8006;
+        public static final int START_GAME = 8007;
     }
 
     public static class ErrorCode{
@@ -184,5 +190,8 @@ public class CmdDefine {
         public static final String LIST = "list";
         public static final String ACCOUNTS = "accounts";
         public static final String CHARACTERS = "characters";
+
+        public static final String TO = "to";
+        public static final String FROM = "from";
     }
 }

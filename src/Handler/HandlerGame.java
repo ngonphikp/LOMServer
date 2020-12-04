@@ -2,6 +2,7 @@ package Handler;
 
 import Base.BaseExtension;
 import Base.BaseHandler;
+import Base.RoomManage;
 import Controls.C_Account;
 import Controls.C_Character;
 import Models.M_Character;
@@ -16,11 +17,14 @@ import com.smartfoxserver.v2.entities.data.SFSArray;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class HandlerGame extends BaseHandler {
     public List<User> listUser = new ArrayList<>();
+    public Map<Integer, List<M_Character>> mapArrange = new HashMap<>();
 
     public HandlerGame(BaseExtension extension) {
         super(extension, CmdDefine.Module.MODULE_GAME);
@@ -29,7 +33,20 @@ public class HandlerGame extends BaseHandler {
     @Override
     protected void HandleClientRequest(int cmdId, User user, ISFSObject data) {
         switch (cmdId) {
-            case CmdDefine.CMD.START_PVP:
+            case CmdDefine.CMD.OUT_ROOM_GAME:
+                HandleOutRoomGame(user, data);
+                break;
+            case CmdDefine.CMD.UN_ACTIVE_CHAR:
+                HandleUnActive(user, data);
+                break;
+            case CmdDefine.CMD.ACTIVE_CHAR:
+                HandleActive(user, data);
+                break;
+            case CmdDefine.CMD.CHANGE_CHAR:
+                HandleChange(user, data);
+                break;
+            case CmdDefine.CMD.LOCK_ARRANGE:
+                HandleLock(user, data);
                 break;
         }
     }
@@ -46,22 +63,129 @@ public class HandlerGame extends BaseHandler {
         }
     }
 
+    private void HandleLock(User user, ISFSObject data) {
+        trace("____________________________ HandleLock ____________________________");
+        int id_ac = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        // === Gửi dữ liệu xuống ===
+        data.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+        data.putInt(CmdDefine.ModuleAccount.ID, id_ac);
+        this.send(this.module, data, extension.getParentRoom().getUserList());
+
+        // === Thao tác room
+        List<M_Character> lstCharacter = new ArrayList<>();
+        ISFSArray objs = data.getSFSArray(CmdDefine.ModuleAccount.CHARACTERS);
+        for(int i = 0; i < objs.size(); i++){
+            lstCharacter.add(new M_Character(objs.getSFSObject(i)));
+        }
+        mapArrange.put(id_ac, lstCharacter);
+
+        if(mapArrange.size() > 1){
+            StartGame();
+        }
+    }
+
+    private void StartGame(){
+        trace("____________________________ StartGame ____________________________");
+        // === Gửi dữ liệu xuống ===
+        ISFSObject packet = new SFSObject();
+        packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.START_GAME);
+        trace(packet.getDump());
+        this.send(this.module, packet, extension.getParentRoom().getUserList());
+    }
+
+    private void HandleChange(User user, ISFSObject data) {
+        trace("____________________________ HandleChange ____________________________");
+        int id_ac = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        // === Thao tác database
+
+        // === Gửi dữ liệu xuống ===
+        data.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+        data.putInt(CmdDefine.ModuleAccount.ID, id_ac);
+        this.send(this.module, data, extension.getParentRoom().getUserList());
+    }
+
+    private void HandleActive(User user, ISFSObject data) {
+        trace("____________________________ HandleActive ____________________________");
+        int id_ac = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        // === Thao tác database
+
+        // === Gửi dữ liệu xuống ===
+        data.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+        data.putInt(CmdDefine.ModuleAccount.ID, id_ac);
+        this.send(this.module, data, extension.getParentRoom().getUserList());
+    }
+
+    private void HandleUnActive(User user, ISFSObject data) {
+        trace("____________________________ HandleUnActive ____________________________");
+        int id_ac = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        // === Thao tác database
+
+        // === Gửi dữ liệu xuống ===
+        data.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+        data.putInt(CmdDefine.ModuleAccount.ID, id_ac);
+        this.send(this.module, data, extension.getParentRoom().getUserList());
+    }
+
+    private void HandleOutRoomGame(User user, ISFSObject data) {
+        trace("____________________________ HandleOutRoomGame ____________________________");
+        int id_ac = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        // === Thao tác database
+
+        // === Gửi dữ liệu xuống ===
+        data.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+        data.putInt(CmdDefine.ModuleAccount.ID, id_ac);
+        this.send(this.module, data, extension.getParentRoom().getUserList());
+
+        // === Thao tác với room
+        extension.getParentRoom().removeUser(user);
+        if(extension.getParentRoom().isEmpty()){
+            RoomManage manage = new RoomManage(this.getParentExtension());
+            manage.removeRoom(extension.getParentRoom());
+        }
+    }
+
     private void HandleDisconnectGame(SFSEventType type, ISFSEvent event) {
         trace("____________________________ HandleDisconnectGame ____________________________");
 
         extension.getParentRoom().removeUser((User) event.getParameter(SFSEventParam.USER));
+
+        if(extension.getParentRoom().isEmpty()){
+            RoomManage manage = new RoomManage(this.getParentExtension());
+            manage.removeRoom(extension.getParentRoom());
+        }
     }
 
     private void HandleJoinRoomGame(SFSEventType type, ISFSEvent event) {
         trace("____________________________ HandleJoinRoomGame ____________________________");
 
         User user = (User) event.getParameter(SFSEventParam.USER);
-        listUser.add(user);
-
         trace(user.getName() + " => " + extension.getParentRoom().getName());
 
+        listUser.add(user);
         if(extension.getParentRoom().isFull()){
-            // === Thao tác database và Gửi dữ liệu xuống ===
+            call(user);
+        }
+    }
+
+    private synchronized void call(User user) {
+        if (listUser.size() > 1){
             ISFSObject packet = new SFSObject();
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 

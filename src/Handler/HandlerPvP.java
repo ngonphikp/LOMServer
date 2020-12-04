@@ -62,6 +62,7 @@ public class HandlerPvP extends BaseHandler {
             manage.userJoinRoom(user, room);
             manage.userJoinRoom(userThat, room);
         }
+
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);

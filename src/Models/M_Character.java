@@ -13,6 +13,13 @@ public class M_Character {
 
     public M_Character(){}
 
+    public M_Character(ISFSObject obj){
+        id = obj.getInt(CmdDefine.ModuleCharacter.ID);
+        id_cfg = obj.getUtfString(CmdDefine.ModuleCharacter.ID_CFG);
+        lv = obj.getInt(CmdDefine.ModuleCharacter.LV);
+        idx = obj.getInt(CmdDefine.ModuleCharacter.IDX);
+    }
+
     public M_Character(JsonObject obj){
         id = obj.getInt(CmdDefine.ModuleCharacter.ID);
         id_cfg = obj.getString(CmdDefine.ModuleCharacter.ID_CFG);
