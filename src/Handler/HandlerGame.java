@@ -17,14 +17,12 @@ import com.smartfoxserver.v2.entities.data.SFSArray;
 import com.smartfoxserver.v2.entities.data.SFSObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class HandlerGame extends BaseHandler {
     public List<User> listUser = new ArrayList<>();
-    public Map<Integer, List<M_Character>> mapArrange = new HashMap<>();
+    public int countLock = 0;
     public int countScenario = 0;
 
     public HandlerGame(BaseExtension extension) {
@@ -90,14 +88,8 @@ public class HandlerGame extends BaseHandler {
         this.send(this.module, data, extension.getParentRoom().getUserList());
 
         // === Thao tác room
-        List<M_Character> lstCharacter = new ArrayList<>();
-        ISFSArray objs = data.getSFSArray(CmdDefine.ModuleAccount.CHARACTERS);
-        for(int i = 0; i < objs.size(); i++){
-            lstCharacter.add(new M_Character(objs.getSFSObject(i)));
-        }
-        mapArrange.put(id_ac, lstCharacter);
-
-        if(mapArrange.size() > 1){
+        countLock++;
+        if(countLock > 1){
             StartGame();
         }
     }
