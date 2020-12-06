@@ -55,7 +55,7 @@ public class HandlerCampaign extends BaseHandler {
         for(int i = 0; i < ticks.size(); i++){
             arr.addSFSObject(ticks.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleTickCampaign.TICKS, arr);
+        packet.putSFSArray(CmdDefine.ModuleTickCampaign.TICKS_CAMPAIGN, arr);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_TICKS_CAMPAIGN);
         trace(packet.getDump());
@@ -69,7 +69,7 @@ public class HandlerCampaign extends BaseHandler {
 
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-        int id_campaign = data.getInt(CmdDefine.ModuleTickCampaign.ID_CAMPAIGN);
+        int id_campaign = data.getInt(CmdDefine.ModuleCampaign.ID);
         int star = data.getInt(CmdDefine.ModuleTickCampaign.STAR);
 
         // === Thao tác database ===

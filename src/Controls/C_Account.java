@@ -3,6 +3,7 @@ package Controls;
 import Base.BaseControl;
 import Base.CouchBase;
 import Models.M_Account;
+import Util.C_Util;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -46,12 +47,8 @@ public class C_Account extends BaseControl {
                     .put(CmdDefine.ModuleAccount.DEDIWEEK, 0);
             CouchBase.set(Module + "::" + id, obj);
         }
-        // Link username
-        {
-            JsonObject obj = JsonObject.create()
-                    .put("key", Module + "::" + id);
-            CouchBase.set("username->" + Module + "::" + username, obj);
-        }
+        // Query username
+        C_Util.Link1_1(CmdDefine.ModuleAccount.USERNAME, username, Module, id);
         // Update count
         updateCount(Module, id);
 
@@ -59,8 +56,8 @@ public class C_Account extends BaseControl {
     }
 
     public static M_Account get(String username, String password){
-        if(CouchBase.containKey("username->" + Module + "::" + username)){
-            String key = CouchBase.get("username->" + Module + "::" + username).getString("key");
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username)){
+            String key = CouchBase.get(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username).getString("key");
             JsonObject obj = CouchBase.get(key);
             return (obj.getString(CmdDefine.ModuleAccount.PASSWORD).equals(password)) ? new M_Account(obj): null;
         }
@@ -68,28 +65,20 @@ public class C_Account extends BaseControl {
     }
 
     public static M_Account getByUserName(String username){
-        if(CouchBase.containKey("username->" + Module + "::" + username)){
-            String key = CouchBase.get("username->" + Module + "::" + username).getString("key");
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username)){
+            String key = CouchBase.get(CmdDefine.ModuleAccount.USERNAME + "->" + Module + "::" + username).getString("key");
             JsonObject obj = CouchBase.get(key);
             return new M_Account(obj);
         }
         return null;
     }
 
-    private static M_Account getByKey(String key){
-        return (CouchBase.containKey(key)) ? new M_Account(CouchBase.get(key)) : null;
-    }
-
-    public static M_Account get(int id){
-        return getByKey(Module + "::" + id);
-    }
-
     public static ArrayList<M_Account> getByIdGuild(int id_guild){
         ArrayList<M_Account> accounts = new ArrayList<>();
-        JsonArray arr = CouchBase.get("id_guild->" + Module + "::" + id_guild).getArray("keys");
+        JsonArray arr = CouchBase.get(CmdDefine.ModuleGuild.ID + "->" + Module + "::" + id_guild).getArray("keys");
         if(arr != null){
             for(int i = 0; i < arr.size(); i++){
-                accounts.add(getByKey((String) arr.get(i)));
+                accounts.add(get((String) arr.get(i)));
             }
         }
         return accounts;
@@ -109,19 +98,19 @@ public class C_Account extends BaseControl {
     public static void insertFriends(int id_ac_A, int id_ac_B){
         JsonObject obj = JsonObject.create();
         JsonArray friends = JsonArray.create();
-        if(CouchBase.containKey("id_ac->friends::" + id_ac_A)){
-            friends = CouchBase.get("id_ac->friends::" + id_ac_A).getArray("keys");
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "->friends::" + id_ac_A)){
+            friends = CouchBase.get(CmdDefine.ModuleAccount.ID + "->friends::" + id_ac_A).getArray("keys");
         }
         friends.add(Module + "::" + id_ac_B);
         obj.put("keys", friends);
 
-        CouchBase.set("id_ac->friends::" + id_ac_A, obj);
+        CouchBase.set(CmdDefine.ModuleAccount.ID + "->friends::" + id_ac_A, obj);
     }
 
     public static void removeFriends(int id_ac_A, int id_ac_B){
-        if(CouchBase.containKey("id_ac->friends::" + id_ac_A)){
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "->friends::" + id_ac_A)){
             JsonObject obj = JsonObject.create();
-            JsonArray friends = CouchBase.get("id_ac->friends::" + id_ac_A).getArray("keys");
+            JsonArray friends = CouchBase.get(CmdDefine.ModuleAccount.ID + "->friends::" + id_ac_A).getArray("keys");
             int find = -1;
             for (int i = 0; i < friends.size(); i++) {
                 if(friends.getString(i).equals(Module + "::" + id_ac_B)) {
@@ -133,14 +122,14 @@ public class C_Account extends BaseControl {
                 List<Object> lst = friends.toList();
                 lst.remove(find);
                 obj.put("keys", lst);
-                CouchBase.set("id_ac->friends::" + id_ac_A, obj);
+                CouchBase.set(CmdDefine.ModuleAccount.ID + "->friends::" + id_ac_A, obj);
             }
         }
     }
     
     public static boolean checkFriend(int id_ac_A, int id_ac_B){
-        if(CouchBase.containKey("id_ac->friends::" + id_ac_A)){
-            JsonArray friends = CouchBase.get("id_ac->friends::" + id_ac_A).getArray("keys");
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "->friends::" + id_ac_A)){
+            JsonArray friends = CouchBase.get(CmdDefine.ModuleAccount.ID + "->friends::" + id_ac_A).getArray("keys");
             for (int i = 0; i < friends.size(); i++) {
                 String keyAc = friends.getString(i);
                 if(keyAc.equals(Module + "::" + id_ac_B)) return true;
@@ -151,14 +140,22 @@ public class C_Account extends BaseControl {
 
     public static ArrayList<M_Account> getFriends(int id){
         ArrayList<M_Account> accounts = new ArrayList<>();
-        if(CouchBase.containKey("id_ac->friends::" + id)){
-            JsonArray arr = CouchBase.get("id_ac->friends::" + id).getArray("keys");
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "->friends::" + id)){
+            JsonArray arr = CouchBase.get(CmdDefine.ModuleAccount.ID + "->friends::" + id).getArray("keys");
             if(arr != null){
                 for(int i = 0; i < arr.size(); i++){
-                    accounts.add(getByKey((String) arr.get(i)));
+                    accounts.add(get((String) arr.get(i)));
                 }
             }
         }
         return accounts;
+    }
+
+    private static M_Account get(String key){
+        return (CouchBase.containKey(key)) ? new M_Account(CouchBase.get(key)) : null;
+    }
+
+    public static M_Account get(int id){
+        return get(Module + "::" + id);
     }
 }

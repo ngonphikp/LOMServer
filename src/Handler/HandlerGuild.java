@@ -42,7 +42,7 @@ public class HandlerGuild extends BaseHandler {
             case CmdDefine.CMD.PLEASE_GUILD:
                 HandlePleaseGuild(user, data);
                 break;
-            case CmdDefine.CMD.FIX_MASTER_GUILD:
+            case CmdDefine.CMD.CHANGE_MASTER_GUILD:
                 HandleChangeMaster(user, data);
                 break;
             case CmdDefine.CMD.GET_NOTI_GUILD:
@@ -78,26 +78,32 @@ public class HandlerGuild extends BaseHandler {
     private void HandleChangeMaster(User user, ISFSObject data) {
         trace("____________________________ HandleChangeMaster ____________________________");
 
-        int id_ac = Integer.parseInt(user.getName());
+        int id = Integer.parseInt(user.getName());
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-
         // Lấy id guild
-        int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id_ac));
-        int master = data.getInt(CmdDefine.ModuleGuild.MASTER);
+        int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id));
+
+        // Lấy id Account: master
+        int id_master = data.getInt(CmdDefine.ModuleGuild.MASTER);
 
         // === Thao tác database ===
-        M_Guild guild = C_Guild.get(id_guild, false);
-        guild.master = master;
-        C_Guild.set(guild);
+        // Thay đổi chức vụ Account Master cũ
+        M_Account master = C_Account.get(id);
+        master.job = 0;
+        C_Account.set(master);
+        // Thay đổi chức vụ Account Master mới
+        M_Account account = C_Account.get(id_master);
+        account.job = 1;
+        C_Account.set(account);
 
-        C_EventGuild.insert("Hội trưởng: " + C_Account.get(id_ac).name + " nhường chức cho " + C_Account.get(master).name, id_guild);
+        C_EventGuild.insert("Hội trưởng: " + master.name + " nhường chức cho " + account.name, id_guild);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.FIX_MASTER_GUILD);
+        packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.CHANGE_MASTER_GUILD);
         trace(packet.getDump());
         this.send(this.module, packet, user);
     }
@@ -112,22 +118,25 @@ public class HandlerGuild extends BaseHandler {
         int id_guild = data.getInt(CmdDefine.ModuleGuild.ID);
 
         // === Thao tác database ===
+        // Thêm Account vào Guild
         C_Guild.insertAccount(id_guild, id_ac);
+        // Thay đổi chức vụ
         M_Account account = C_Account.get(id_ac);
         account.job = 0;
         account.dediTotal = 0;
         account.dediWeek = 0;
         C_Account.set(account);
-        M_Guild guild = C_Guild.get(id_guild, true);
+        // Lấy thông tin Guild
+        M_Guild guild = C_Guild.get(id_guild);
 
-        C_EventGuild.insert(C_Account.get(id_ac).name + " Gia nhập hội !", id_guild);
+        C_EventGuild.insert(account.name + " Gia nhập hội !", id_guild);
 
         // === Thao tác với room Guild
         RoomManage manage = new RoomManage(this.getParentExtension());
-        Room room = manage.getRoom("GD" + guild.id);
+        Room room = manage.getRoom("GD" + id_guild);
         if(room == null){
-            manage.initRoom("HandlerExtension", "GD" + guild.id, CmdDefine.Room.Guild, 50);
-            room = manage.getRoom("GD" + guild.id);
+            manage.initRoom("HandlerExtension", "GD" + id_guild, CmdDefine.Room.Guild, 50);
+            room = manage.getRoom("GD" + id_guild);
         }
         manage.userJoinRoom(user, room);
 
@@ -151,7 +160,7 @@ public class HandlerGuild extends BaseHandler {
         int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id));
 
         // === Thao tác database ===
-        M_Guild guild = C_Guild.get(id_guild, true);
+        M_Guild guild = C_Guild.get(id_guild);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -173,7 +182,7 @@ public class HandlerGuild extends BaseHandler {
         int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id));
 
         // === Thao tác database ===
-        String noti = C_Guild.get(id_guild, false).noti;
+        String noti = C_Guild.get(id_guild).noti;
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -206,7 +215,7 @@ public class HandlerGuild extends BaseHandler {
         for(int i = 0; i < lstEvt.size(); i++){
             events.addSFSObject(lstEvt.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleGuild.EVENTS, events);
+        packet.putSFSArray(CmdDefine.ModuleEventGuild.EVENTS_GUILD, events);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_EVENT_GUILD);
         trace(packet.getDump());
@@ -223,7 +232,7 @@ public class HandlerGuild extends BaseHandler {
         int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id));
 
         // === Thao tác database ===
-        ArrayList<M_Account> lstAccount = C_Account.getByIdGuild(id);
+        ArrayList<M_Account> lstAccount = C_Account.getByIdGuild(id_guild);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
@@ -233,7 +242,7 @@ public class HandlerGuild extends BaseHandler {
         for(int i = 0; i < lstAccount.size(); i++){
             accounts.addSFSObject(lstAccount.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleGuild.ACCOUNTS, accounts);
+        packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accounts);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_MEMBER_GUID);
         trace(packet.getDump());
@@ -252,7 +261,7 @@ public class HandlerGuild extends BaseHandler {
         String noti = data.getUtfString(CmdDefine.ModuleGuild.NOTI);
 
         // === Thao tác database ===
-        M_Guild guild = C_Guild.get(id_guild, false);
+        M_Guild guild = C_Guild.get(id_guild);
         guild.noti = noti;
         C_Guild.set(guild);
 
@@ -302,7 +311,9 @@ public class HandlerGuild extends BaseHandler {
 
         // === Thao tác database ===
         // Thêm guild
-        int id = C_Guild.insert(name, master);
+        int id = C_Guild.insert(name);
+        // Thêm Account vào Guild
+        C_Guild.insertAccount(id, master);
         // Thay đổi chức vụ
         M_Account account = C_Account.get(master);
         account.job = 1;
@@ -310,9 +321,9 @@ public class HandlerGuild extends BaseHandler {
         account.dediWeek = 0;
         C_Account.set(account);
         // Lấy lại thông tin guild
-        M_Guild guild = C_Guild.get(id, true);
+        M_Guild guild = C_Guild.get(id);
 
-        C_EventGuild.insert(C_Account.get(master).name + " Tạo hội !", id);
+        C_EventGuild.insert(account.name + " Tạo hội !", id);
 
         // === Thao tác room guild
         // Tạo room guild + id
@@ -343,14 +354,17 @@ public class HandlerGuild extends BaseHandler {
         int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, C_Guild.getKey(id_ac));
 
         // === Thao tác database ===
+        // Thay đổi chức vụ
         M_Account account = C_Account.get(id_ac);
         account.job = -1;
         account.dediWeek = 0;
         account.dediTotal = 0;
         C_Account.set(account);
-        C_Guild.deleteAccount(id_guild, id_ac);
 
-        C_EventGuild.insert(C_Account.get(id_ac).name + " Thoát hội !", id_guild);
+        // Guild bỏ Account
+        C_Guild.removeAccount(id_guild, id_ac);
+
+        C_EventGuild.insert(account.name + " Thoát hội !", id_guild);
 
         // === Thao tác room guild
         // User out room
@@ -395,7 +409,7 @@ public class HandlerGuild extends BaseHandler {
         for(int i = 0; i < bossGuilds.size(); i++){
             bgs.addSFSObject(bossGuilds.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleGuild.BOSSES, bgs);
+        packet.putSFSArray(CmdDefine.ModuleBossGuild.BOSSES_GUILD, bgs);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_BOSSES_GUILD);
         trace(packet.getDump());
@@ -436,8 +450,8 @@ public class HandlerGuild extends BaseHandler {
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        packet.putSFSObject(CmdDefine.ModuleGuild.BOSS, bossGuild.parse());
-        packet.putSFSObject(CmdDefine.ModuleGuild.TICK_BOSS, tickBossGuild.parse());
+        packet.putSFSObject(CmdDefine.ModuleBossGuild.BOSS_GUILD, bossGuild.parse());
+        packet.putSFSObject(CmdDefine.ModuleTickBossGuild.TICK_BOSS_GUILD, tickBossGuild.parse());
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_TICK_BOSS_GUILD);
         trace(packet.getDump());

@@ -3,6 +3,7 @@ package Controls;
 import Base.BaseControl;
 import Base.CouchBase;
 import Models.M_Guild;
+import Util.C_Util;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -18,14 +19,13 @@ public class C_Guild extends BaseControl {
         if(CouchBase.containKey(Module + "::" + data.id)){
             JsonObject obj = CouchBase.get(Module + "::" + data.id)
                     .put(CmdDefine.ModuleGuild.NAME, data.name)
-                    .put(CmdDefine.ModuleGuild.MASTER, data.master)
                     .put(CmdDefine.ModuleGuild.LV, data.lv)
                     .put(CmdDefine.ModuleGuild.NOTI, data.noti);
             CouchBase.set(Module + "::" + data.id, obj);
         }
     }
 
-    public static int insert(String name, int master){
+    public static int insert(String name){
         // Get Count
         int id = getCount(Module) + 1;
         // Create Guild
@@ -33,71 +33,40 @@ public class C_Guild extends BaseControl {
             JsonObject obj = JsonObject.create()
                     .put(CmdDefine.ModuleGuild.ID, id)
                     .put(CmdDefine.ModuleGuild.NAME, name)
-                    .put(CmdDefine.ModuleGuild.MASTER, master)
                     .put(CmdDefine.ModuleGuild.LV, 1)
                     .put(CmdDefine.ModuleGuild.NOTI, "Please add notice!");
             CouchBase.set(Module + "::" + id, obj);
         }
-
-        linkAccounts(id, master);
-        lindId_ac(id, master);
-
         // Update count
         updateCount(Module, id);
         return id;
     }
 
     public static void insertAccount(int id_guild, int id_ac){
-        linkAccounts(id_guild, id_ac);
-        lindId_ac(id_guild, id_ac);
+        // Link 1Guild -> nAc
+        C_Util.Link1_n(CmdDefine.ModuleGuild.ID, id_guild, CmdDefine.Module.MODULE_ACCOUNT, id_ac);
+        // Link 1Ac -> 1Guild
+        C_Util.Link1_1(CmdDefine.ModuleAccount.ID, id_ac, Module, id_guild);
     }
 
-    public static void deleteAccount(int id_guild, int id_ac){
-        // UnLinkAccounts
-        if(CouchBase.containKey("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild)){
-            JsonObject obj = JsonObject.create();
-            JsonArray accounts = CouchBase.get("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild).getArray("keys");
-            int find = -1;
-            for(int i = 0; i < accounts.size(); i++){
-                if(accounts.getString(i).equals(CmdDefine.Module.MODULE_ACCOUNT + "::" + id_ac)){
-                    find = i;
-                    break;
-                }
-            }
-            if (find != -1) {
-                List<Object> lst = accounts.toList();
-                lst.remove(find);
-                obj.put("keys", lst);
-                CouchBase.set("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild, obj);
-            }
+    public static void removeAccount(int id_guild, int id_ac){
+        // UnLink 1Guild -> nAc: 1id_ac
+        C_Util.UnLink1_n(CmdDefine.ModuleGuild.ID, id_guild, CmdDefine.Module.MODULE_ACCOUNT, id_ac);
+        // UnLink 1Ac -> 1Guild
+        C_Util.UnLink1_1(CmdDefine.ModuleAccount.ID, id_ac, Module);
+    }
+
+    public static String getKey(int id_ac){
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "->" + Module + "::" + id_ac)){
+            return CouchBase.get(CmdDefine.ModuleAccount.ID + "->" + Module + "::" + id_ac).getString("key");
         }
-
-        // UnLinkId_ac
-        CouchBase.delete("id_ac->" + Module + "::" + id_ac);
-    }
-
-    private static void linkAccounts(int id_guild, int id_ac){
-        JsonObject obj = JsonObject.create();
-        JsonArray accounts = JsonArray.create();
-        if(CouchBase.containKey("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild)){
-            accounts = CouchBase.get("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild).getArray("keys");
-        }
-        accounts.add(CmdDefine.Module.MODULE_ACCOUNT + "::" + id_ac);
-        obj.put("keys", accounts);
-
-        CouchBase.set("id_guild->" + CmdDefine.Module.MODULE_ACCOUNT + "::" + id_guild, obj);
-    }
-
-    private static void lindId_ac(int id_guild, int id_ac){
-        JsonObject obj = JsonObject.create()
-                .put("key", Module + "::" + id_guild);
-        CouchBase.set("id_ac->" + Module + "::" + id_ac, obj);
+        return null;
     }
 
     public static ArrayList<M_Guild> getAll(){
         ArrayList<M_Guild> result = new ArrayList<>();
         for(int i = 0; i <= getCount(Module); i++){
-            M_Guild guild = get(i, true);
+            M_Guild guild = get(i);
             if(guild != null){
                 result.add(guild);
             }
@@ -109,18 +78,7 @@ public class C_Guild extends BaseControl {
         return (CouchBase.containKey(key)) ? new M_Guild(CouchBase.get(key)) : null;
     }
 
-    public static M_Guild get(int id, boolean isGetAccs){
-        M_Guild guild = get(Module + "::" + id);
-        if(guild != null && isGetAccs){
-            guild.accounts = C_Account.getByIdGuild(id);
-        }
-        return guild;
-    }
-
-    public static String getKey(int id_ac){
-        if(CouchBase.containKey("id_ac->" + Module + "::" + id_ac)){
-            return CouchBase.get("id_ac->" + Module + "::" + id_ac).getString("key");
-        }
-        return null;
+    public static M_Guild get(int id){
+        return get(Module + "::" + id);
     }
 }

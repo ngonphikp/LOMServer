@@ -3,6 +3,7 @@ package Controls;
 import Base.BaseControl;
 import Base.CouchBase;
 import Models.M_Character;
+import Util.C_Util;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -35,18 +36,10 @@ public class C_Character extends BaseControl {
                     .put(CmdDefine.ModuleCharacter.IDX, idx);
             CouchBase.set(Module + "::" + id, obj);
         }
-        // Link id_ac
-        {
-            JsonObject obj = JsonObject.create();
-            JsonArray characters = JsonArray.create();
-            if(CouchBase.containKey("id_ac->" + Module + "::" + id_ac)){
-                characters = CouchBase.get("id_ac->" + Module + "::" + id_ac).getArray("keys");
-            }
-            characters.add(Module + "::" + id);
-            obj.put("keys", characters);
-
-            CouchBase.set("id_ac->" + Module + "::" + id_ac, obj);
-        }
+        // Link 1Ac -> nChar
+        C_Util.Link1_n(CmdDefine.ModuleAccount.ID, id_ac, Module, id);
+        // Link 1Char -> 1Ac
+        C_Util.Link1_1(CmdDefine.ModuleCharacter.ID, id, CmdDefine.Module.MODULE_ACCOUNT, id_ac);
         // Update count
         updateCount(Module, id);
 
@@ -55,8 +48,8 @@ public class C_Character extends BaseControl {
 
     public static ArrayList<M_Character> gets(int id_ac){
         ArrayList<M_Character> result = new ArrayList<>();
-        if(CouchBase.containKey("id_ac->" + Module + "::" + id_ac)){
-            JsonArray characters = CouchBase.get("id_ac->" + Module + "::" + id_ac).getArray("keys");
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "->" + Module + "::" + id_ac)){
+            JsonArray characters = CouchBase.get(CmdDefine.ModuleAccount.ID + "->" + Module + "::" + id_ac).getArray("keys");
             for (int i = 0; i < characters.size(); i++){
                 result.add(get((String) characters.get(i)));
             }

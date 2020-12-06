@@ -23,7 +23,7 @@ public class CmdDefine {
         public static final int GET_GUILD = 5003;
         public static final int OUT_GUILD = 5004;
         public static final int PLEASE_GUILD = 5005;
-        public static final int FIX_MASTER_GUILD = 5006;
+        public static final int CHANGE_MASTER_GUILD = 5006;
         public static final int GET_NOTI_GUILD = 5007;
         public static final int GET_EVENT_GUILD = 5008;
         public static final int GET_MEMBER_GUID = 5009;
@@ -101,15 +101,11 @@ public class CmdDefine {
         public static final String DEDITOTAL = "dedication_total_ac";
         public static final String DEDIWEEK = "dedication_week_ac";
 
-        public static final String ID_GUILD = "id_guild";
-
         public static final String ACCOUNT = "account";
+        public static final String ACCOUNTS = "accounts";
+
         public static final String LOGIN_OUT_DATA = "loginoutdata";
-
-        public static final String CHARACTERS = "characters";
-
         public static final String TYPE_TAVERN = "type_tavern";
-        public static final String CHARACTER = "character";
     }
 
     public static class ModuleCharacter{
@@ -117,14 +113,21 @@ public class CmdDefine {
         public static final String ID_CFG = "id_cfg_char";
         public static final String LV = "lv_char";
         public static final String IDX = "idx_char";
+
+        public static final String CHARACTER = "character";
+        public static final String CHARACTERS = "characters";
+    }
+
+    public static class ModuleCampaign{
+        public static final String ID = "id_camp";
     }
 
     public static class ModuleTickCampaign{
         public static final String ID = "id_tc";
         public static final String STAR = "star_tc";
-        public static final String ID_CAMPAIGN = "id_campaign";
 
-        public static final String TICKS = "ticks";
+        public static final String TICK_CAMPAIGN = "tick_camp";
+        public static final String TICKS_CAMPAIGN = "ticks_camp";
     }
 
     public static class ModuleGuild
@@ -134,63 +137,58 @@ public class CmdDefine {
         public static final String LV = "lv_guild";
         public static final String NOTI = "noti_guild";
 
-        public static final String ACCOUNTS = "accounts";
-
-        public static final String MASTER = "master";
-
         public static final String GUILD = "guild";
         public static final String GUILDS = "guilds";
 
-        public static final String EVENTS = "events";
-
-        public static final String BOSSES = "bosses";
-        public static final String BOSS = "boss";
-        public static final String TICK_BOSS = "tick_boss";
+        public static final String MASTER = "master_guild";
     }
 
     public static class ModuleEventGuild
     {
-        public static final String ID = "id_evt_guild";
-        public static final String CONTENT = "content_evt_guild";
-        public static final String TIME = "time_evt_guild";
+        public static final String ID = "id_evtg";
+        public static final String CONTENT = "content_evtg";
+        public static final String TIME = "time_evtg";
 
-        public static final String COUNT = "count_evt_guild";
+        public static final String COUNT = "count_evtg";
+
+        public static final String EVENT_GUILD = "evt_guild";
+        public static final String EVENTS_GUILD = "evts_guild";
     }
 
     public static class ModuleCF
     {
-        public static final String ACCOUNTS = "accounts";
         public static final String ID_ONLINES = "id_onlines";
-
-        public static final String ACCOUNT = "account_cf";
         public static final String MESSAGE = "message_cf";
-
         public static final String IS_FRIEND = "is_friend";
 
-        public static final String CONTENT = "content";
+        public static final String CONTENT = "content_cf";
         public static final String IS_CHECK_ID = "is_check_id";
     }
 
     public static class ModuleBossGuild{
         public static final String ID = "id_bg";
         public static final String ID_BOSS = "id_boss";
-        public static final String CUR_HP = "current_hp";
+        public static final String CUR_HP = "cur_hp_bg";
         public static final String STATUS = "status_bg";
+
+        public static final String BOSS_GUILD = "boss_guild";
+        public static final String BOSSES_GUILD = "bosses_guild";
     }
 
     public static class ModuleTickBossGuild{
         public static final String ID = "id_tbg";
 
-        public static final String CUR_TURN = "current_turn";
-        public static final String IS_REWARD = "is_reward";
+        public static final String CUR_TURN = "cur_turn_tbg";
+        public static final String IS_REWARD = "is_reward_tbg";
 
         public static final String POINT = "point_tbg";
+
+        public static final String TICK_BOSS_GUILD = "tick_bg";
+        public static final String TICKS_BOSS_GUILD = "ticks_bg";
     }
 
     public static class ModuleGame{
         public static final String LIST = "list";
-        public static final String ACCOUNTS = "accounts";
-        public static final String CHARACTERS = "characters";
 
         public static final String TO = "to";
         public static final String FROM = "from";

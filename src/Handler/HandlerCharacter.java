@@ -35,7 +35,7 @@ public class HandlerCharacter extends BaseHandler {
 
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-        ISFSArray objs = data.getSFSArray(CmdDefine.ModuleAccount.CHARACTERS);
+        ISFSArray objs = data.getSFSArray(CmdDefine.ModuleCharacter.CHARACTERS);
 
         // === Thao tác database ===
         for(int i = 0; i < objs.size(); i++){

@@ -200,14 +200,14 @@ public class HandlerGame extends BaseHandler {
             for (int i = 0; i < listUser.size(); i++) {
                 ISFSObject object = new SFSObject();
                 int id_ac = Integer.parseInt(listUser.get(i).getName());
-                object.putSFSObject(CmdDefine.ModuleGame.ACCOUNTS, C_Account.get(id_ac).parse());
+                object.putSFSObject(CmdDefine.ModuleAccount.ACCOUNTS, C_Account.get(id_ac).parse());
 
                 ArrayList<M_Character> lstCharacter = C_Character.gets(id_ac);
                 ISFSArray arr = new SFSArray();
                 for(int j = 0; j < lstCharacter.size(); j++){
                     arr.addSFSObject(lstCharacter.get(j).parse());
                 }
-                object.putSFSArray(CmdDefine.ModuleGame.CHARACTERS, arr);
+                object.putSFSArray(CmdDefine.ModuleCharacter.CHARACTERS, arr);
 
                 list.addSFSObject(object);
             }

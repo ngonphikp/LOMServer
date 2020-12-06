@@ -80,13 +80,13 @@ public class HandlerAccount extends BaseHandler {
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        packet.putInt(CmdDefine.ModuleAccount.ID_GUILD, id_guild);
+        packet.putInt(CmdDefine.ModuleGuild.ID, id_guild);
 
         ISFSArray characters = new SFSArray();
         for(int i = 0; i < lstCharacter.size(); i++){
             characters.addSFSObject(lstCharacter.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleAccount.CHARACTERS, characters);
+        packet.putSFSArray(CmdDefine.ModuleCharacter.CHARACTERS, characters);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_INFO);
         trace(packet.getDump());
@@ -121,7 +121,7 @@ public class HandlerAccount extends BaseHandler {
         for(int i = 0; i < lstCharacter.size(); i++){
             characters.addSFSObject(lstCharacter.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleAccount.CHARACTERS, characters);
+        packet.putSFSArray(CmdDefine.ModuleCharacter.CHARACTERS, characters);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SELECTION);
         trace(packet.getDump());
@@ -149,7 +149,7 @@ public class HandlerAccount extends BaseHandler {
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
         packet.putInt(CmdDefine.ModuleAccount.TYPE_TAVERN, type);
-        packet.putSFSObject(CmdDefine.ModuleAccount.CHARACTER, character.parse());
+        packet.putSFSObject(CmdDefine.ModuleCharacter.CHARACTER, character.parse());
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.TAVERN);
         trace(packet.getDump());

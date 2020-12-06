@@ -88,7 +88,7 @@ public class HandlerCF extends BaseHandler {
         for(int i = 0; i < lstAcc.size(); i++){
             accs.addSFSObject(lstAcc.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS, accs);
+        packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accs);
 
         packet.putSFSArray(CmdDefine.ModuleCF.ID_ONLINES, idOnls);
 
@@ -122,7 +122,7 @@ public class HandlerCF extends BaseHandler {
         for(int i = 0; i < lstAcc.size(); i++){
             accs.addSFSObject(lstAcc.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS, accs);
+        packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accs);
 
         packet.putSFSArray(CmdDefine.ModuleCF.ID_ONLINES, idOnls);
 
@@ -155,7 +155,7 @@ public class HandlerCF extends BaseHandler {
         for(int i = 0; i < lstAcc.size(); i++){
             accs.addSFSObject(lstAcc.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS, accs);
+        packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accs);
 
         packet.putSFSArray(CmdDefine.ModuleCF.ID_ONLINES, idOnls);
 
@@ -185,7 +185,7 @@ public class HandlerCF extends BaseHandler {
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        packet.putSFSObject(CmdDefine.ModuleCF.ACCOUNT, account.parse());
+        packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
         packet.putUtfString(CmdDefine.ModuleCF.MESSAGE, message);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SEND_MESSAGE_GLOBAL);
@@ -216,7 +216,7 @@ public class HandlerCF extends BaseHandler {
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-        packet.putSFSObject(CmdDefine.ModuleCF.ACCOUNT, account.parse());
+        packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
         packet.putUtfString(CmdDefine.ModuleCF.MESSAGE, message);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.SEND_MESSAGE_GUILD);
@@ -251,7 +251,7 @@ public class HandlerCF extends BaseHandler {
         String keyGuild = C_Guild.getKey(id_get);
         if(keyGuild != null){
             int id_guild = C_Util.KeyToId(CmdDefine.Module.MODULE_GUILD, keyGuild);
-            guild = C_Guild.get(id_guild, false);
+            guild = C_Guild.get(id_guild);
         }
 
         // Kiểm tra mối quan hệ bạn bè
@@ -267,7 +267,7 @@ public class HandlerCF extends BaseHandler {
         for(int i = 0; i < characters.size(); i++){
             array.addSFSObject(characters.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleAccount.CHARACTERS, array);
+        packet.putSFSArray(CmdDefine.ModuleCharacter.CHARACTERS, array);
 
         if(guild != null){
             packet.putInt(CmdDefine.ModuleGuild.ID, guild.id);
@@ -365,7 +365,7 @@ public class HandlerCF extends BaseHandler {
         for(int i = 0; i < lstAcc.size(); i++){
             accs.addSFSObject(lstAcc.get(i).parse());
         }
-        packet.putSFSArray(CmdDefine.ModuleCF.ACCOUNTS, accs);
+        packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accs);
 
         packet.putSFSArray(CmdDefine.ModuleCF.ID_ONLINES, idOnls);
 
@@ -398,7 +398,7 @@ public class HandlerCF extends BaseHandler {
         if(isFriend){
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-            packet.putSFSObject(CmdDefine.ModuleCF.ACCOUNT, account.parse());
+            packet.putSFSObject(CmdDefine.ModuleAccount.ACCOUNT, account.parse());
             packet.putUtfString(CmdDefine.ModuleCF.MESSAGE, message);
         }
         else {

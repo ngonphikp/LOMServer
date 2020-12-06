@@ -3,6 +3,7 @@ package Controls;
 import Base.BaseControl;
 import Base.CouchBase;
 import Models.M_EventGuild;
+import Util.C_Util;
 import Util.CmdDefine;
 import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
@@ -30,36 +31,28 @@ public class C_EventGuild extends BaseControl {
             CouchBase.set(Module + "::" + id, obj);
         }
 
-        // Link id_guild
-        {
-            JsonObject obj = JsonObject.create();
-            JsonArray evts = JsonArray.create();
-            if(CouchBase.containKey("id_guild->" + Module + "::" + id_guild)){
-                evts = CouchBase.get("id_guild->" + Module + "::" + id_guild).getArray("keys");
-            }
-            evts.add(Module + "::" + id);
-            obj.put("keys", evts);
-
-            CouchBase.set("id_guild->" + Module + "::" + id_guild, obj);
-        }
+        // Link 1Guild -> nEvt
+        C_Util.Link1_n(CmdDefine.ModuleGuild.ID, id_guild, Module, id);
+        // Link 1Evt -> 1Guild
+        C_Util.Link1_1(CmdDefine.ModuleEventGuild.ID, id, CmdDefine.Module.MODULE_GUILD, id_guild);
 
         // Update count
         updateCount(Module, id);
         return id;
     }
 
-    private static M_EventGuild getByKey(String key){
-        return (CouchBase.containKey(key)) ? new M_EventGuild(CouchBase.get(key)) : null;
-    }
-
     public static ArrayList<M_EventGuild> getByIdGuild(int id_guild, int count){
         ArrayList<M_EventGuild> evts = new ArrayList<>();
-        JsonArray arr = CouchBase.get("id_guild->" + Module + "::" + id_guild).getArray("keys");
+        JsonArray arr = CouchBase.get(CmdDefine.ModuleGuild.ID + "->" + Module + "::" + id_guild).getArray("keys");
         if(arr != null){
             for(int i = count; i < arr.size(); i++){
-                evts.add(C_EventGuild.getByKey((String) arr.get(i)));
+                evts.add(C_EventGuild.get((String) arr.get(i)));
             }
         }
         return evts;
+    }
+
+    private static M_EventGuild get(String key){
+        return (CouchBase.containKey(key)) ? new M_EventGuild(CouchBase.get(key)) : null;
     }
 }
