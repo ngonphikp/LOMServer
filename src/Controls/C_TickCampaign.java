@@ -33,34 +33,15 @@ public class C_TickCampaign extends BaseControl {
         C_Util.Linkn_n(CmdDefine.ModuleAccount.ID, id_ac, CmdDefine.Module.MODULE_ACCOUNT,
                 CmdDefine.ModuleCampaign.ID, id_campaign, CmdDefine.Module.MODULE_CAMPAIGN,
                 id, CmdDefine.Module.MODULE_TICK_CAMPAIGN);
-
-
-        {
-            JsonObject obj = JsonObject.create()
-                    .put("key", Module + "::" + id);
-            CouchBase.set("id_ac&id_campaign->" + Module + "::" + id_ac + "&" + id_campaign, obj);
-        }
-        // Link id_ac
-        {
-            JsonObject obj = JsonObject.create();
-            JsonArray tick_milestones = JsonArray.create();
-            if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "->" + Module + "::" + id_ac)){
-                tick_milestones = CouchBase.get(CmdDefine.ModuleAccount.ID + "->" + Module + "::" + id_ac).getArray("keys");
-            }
-            tick_milestones.add(Module + "::" + id);
-            obj.put("keys", tick_milestones);
-
-            CouchBase.set(CmdDefine.ModuleAccount.ID + "->" + Module + "::" + id_ac, obj);
-        }
         // Update count
         updateCount(Module, id);
 
         return id;
     }
 
-    public static M_TickCampaign get(int id_ac, int id_campaign){
-        if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "&" + CmdDefine.ModuleCampaign.ID + "->" + Module + "::" + id_ac + "&" + id_campaign)){
-            String key = CouchBase.get(CmdDefine.ModuleAccount.ID + "&" + CmdDefine.ModuleCampaign.ID + "->" + "::" + id_ac + "&" + id_campaign).getString("key");
+    public static M_TickCampaign get(int id_ac, int id_camp){
+        if(CouchBase.containKey(CmdDefine.ModuleAccount.ID + "&" + CmdDefine.ModuleCampaign.ID + "->" + Module + "::" + id_ac + "&" + id_camp)){
+            String key = CouchBase.get(CmdDefine.ModuleAccount.ID + "&" + CmdDefine.ModuleCampaign.ID + "->" + Module + "::" + id_ac + "&" + id_camp).getString("key");
             return get(key);
         }
         return null;

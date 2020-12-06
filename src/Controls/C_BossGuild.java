@@ -45,8 +45,8 @@ public class C_BossGuild extends BaseControl {
 
     public static ArrayList<M_BossGuild> gets(int id_guild){
         ArrayList<M_BossGuild> result = new ArrayList<>();
-        if(CouchBase.containKey(CmdDefine.ModuleBossGuild.ID + "->" + Module + "::" + id_guild)){
-            JsonArray boss_guilds = CouchBase.get(CmdDefine.ModuleBossGuild.ID + "->" + Module + "::" + id_guild).getArray("keys");
+        if(CouchBase.containKey(CmdDefine.ModuleGuild.ID + "->" + Module + "::" + id_guild)){
+            JsonArray boss_guilds = CouchBase.get(CmdDefine.ModuleGuild.ID + "->" + Module + "::" + id_guild).getArray("keys");
             for (int i = 0; i < boss_guilds.size(); i++){
                 result.add(get(boss_guilds.getString(i)));
             }

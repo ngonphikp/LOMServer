@@ -69,11 +69,11 @@ public class HandlerCampaign extends BaseHandler {
 
         // === Đọc dữ liệu gửi lên ===
         trace(data.getDump());
-        int id_campaign = data.getInt(CmdDefine.ModuleCampaign.ID);
+        int id_camp = data.getInt(CmdDefine.ModuleCampaign.ID);
         int star = data.getInt(CmdDefine.ModuleTickCampaign.STAR);
 
         // === Thao tác database ===
-        M_TickCampaign tick = C_TickCampaign.get(id_ac, id_campaign);
+        M_TickCampaign tick = C_TickCampaign.get(id_ac, id_camp);
         if(tick.star < star){
             tick.star = star;
             C_TickCampaign.set(tick);

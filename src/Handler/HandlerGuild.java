@@ -128,7 +128,7 @@ public class HandlerGuild extends BaseHandler {
         C_Account.set(account);
         // Lấy thông tin Guild
         M_Guild guild = C_Guild.get(id_guild);
-
+        ArrayList<M_Account> lstAccount = C_Account.getByIdGuild(id_guild);
         C_EventGuild.insert(account.name + " Gia nhập hội !", id_guild);
 
         // === Thao tác với room Guild
@@ -143,6 +143,12 @@ public class HandlerGuild extends BaseHandler {
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        ISFSArray accounts = new SFSArray();
+        for(int i = 0; i < lstAccount.size(); i++){
+            accounts.addSFSObject(lstAccount.get(i).parse());
+        }
+        packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accounts);
 
         packet.putSFSObject(CmdDefine.ModuleGuild.GUILD, guild.parse());
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.PLEASE_GUILD);
@@ -161,10 +167,17 @@ public class HandlerGuild extends BaseHandler {
 
         // === Thao tác database ===
         M_Guild guild = C_Guild.get(id_guild);
+        ArrayList<M_Account> lstAccount = C_Account.getByIdGuild(id_guild);
 
         // === Gửi dữ liệu xuống ===
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+
+        ISFSArray accounts = new SFSArray();
+        for(int i = 0; i < lstAccount.size(); i++){
+            accounts.addSFSObject(lstAccount.get(i).parse());
+        }
+        packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accounts);
 
         packet.putSFSObject(CmdDefine.ModuleGuild.GUILD, guild.parse());
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.GET_GUILD);
@@ -291,7 +304,16 @@ public class HandlerGuild extends BaseHandler {
 
         ISFSArray arr = new SFSArray();
         for(int i = 0; i < guilds.size(); i++){
-            arr.addSFSObject(guilds.get(i).parse());
+            ISFSObject obj = new SFSObject();
+            obj.putSFSObject(CmdDefine.ModuleGuild.GUILD, guilds.get(i).parse());
+            ArrayList<M_Account> lstAccount = C_Account.getByIdGuild(guilds.get(i).id);
+            ISFSArray accounts = new SFSArray();
+            for(int j = 0; j < lstAccount.size(); j++){
+                accounts.addSFSObject(lstAccount.get(j).parse());
+            }
+            packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accounts);
+            obj.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accounts);
+            arr.addSFSObject(obj);
         }
 
         packet.putSFSArray(CmdDefine.ModuleGuild.GUILDS, arr);
@@ -322,7 +344,7 @@ public class HandlerGuild extends BaseHandler {
         C_Account.set(account);
         // Lấy lại thông tin guild
         M_Guild guild = C_Guild.get(id);
-
+        ArrayList<M_Account> lstAccount = C_Account.getByIdGuild(id);
         C_EventGuild.insert(account.name + " Tạo hội !", id);
 
         // === Thao tác room guild
@@ -337,6 +359,12 @@ public class HandlerGuild extends BaseHandler {
         ISFSObject packet = new SFSObject();
         packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
         packet.putSFSObject(CmdDefine.ModuleGuild.GUILD, guild.parse());
+
+        ISFSArray accounts = new SFSArray();
+        for(int i = 0; i < lstAccount.size(); i++){
+            accounts.addSFSObject(lstAccount.get(i).parse());
+        }
+        packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accounts);
 
         packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.CREATE_GUILD);
         trace(packet.getDump());
