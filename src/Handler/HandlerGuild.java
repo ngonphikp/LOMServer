@@ -135,7 +135,7 @@ public class HandlerGuild extends BaseHandler {
         RoomManage manage = new RoomManage(this.getParentExtension());
         Room room = manage.getRoom("GD" + id_guild);
         if(room == null){
-            manage.initRoom("HandlerExtension", "GD" + id_guild, CmdDefine.Room.Guild, 50);
+            manage.initRoom("ZoneExtension", "GD" + id_guild, CmdDefine.Room.Guild, 50);
             room = manage.getRoom("GD" + id_guild);
         }
         manage.userJoinRoom(user, room);
@@ -350,7 +350,7 @@ public class HandlerGuild extends BaseHandler {
         // === Thao tác room guild
         // Tạo room guild + id
         RoomManage manage = new RoomManage(this.getParentExtension());
-        manage.initRoom("HandlerExtension", "GD" + guild.id, CmdDefine.Room.Guild, 50);
+        manage.initRoom("ZoneExtension", "GD" + guild.id, CmdDefine.Room.Guild, 50);
         // User join room
         Room room = manage.getRoom("GD" + guild.id);
         manage.userJoinRoom(user, room);

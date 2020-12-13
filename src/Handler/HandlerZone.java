@@ -48,7 +48,7 @@ public class HandlerZone extends BaseHandler {
     public void OnServerReady(ISFSEvent event){
         trace("____________________________ OnServerReady ____________________________");
         RoomManage manage = new RoomManage(this.getParentExtension());
-        manage.initRoom("HandlerExtension", CmdDefine.Room.Global, CmdDefine.Room.Global, 10000);
+        manage.initRoom("ZoneExtension", CmdDefine.Room.Global, CmdDefine.Room.Global, 10000);
     }
 
     @Override

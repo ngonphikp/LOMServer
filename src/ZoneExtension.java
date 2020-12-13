@@ -3,11 +3,11 @@ import Base.CouchBase;
 import Base.QueueManage;
 import Handler.*;
 
-public class HandlerExtension extends BaseExtension {
+public class ZoneExtension extends BaseExtension {
 
     @java.lang.Override
     public void init() {
-        trace("____________________________ HandleExtension ____________________________");
+        trace("____________________________ ZoneExtension ____________________________");
         super.init();
 
         CouchBase.init();

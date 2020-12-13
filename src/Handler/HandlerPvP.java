@@ -56,7 +56,7 @@ public class HandlerPvP extends BaseHandler {
 
             // Thao tác với room Game
             RoomManage manage = new RoomManage(this.getParentExtension());
-            manage.initRoom("Base.GameExtension", user.getName() + "-" + userThat.getName(), CmdDefine.Room.Game, 2);
+            manage.initRoom("GameExtension", user.getName() + "-" + userThat.getName(), CmdDefine.Room.Game, 2);
             Room room = manage.getRoom(user.getName() + "-" + userThat.getName());
 
             manage.userJoinRoom(user, room);

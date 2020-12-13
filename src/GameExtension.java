@@ -1,5 +1,4 @@
-package Base;
-
+import Base.BaseExtension;
 import Handler.HandlerGame;
 
 public class GameExtension extends BaseExtension {

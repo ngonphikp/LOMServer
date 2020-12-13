@@ -67,7 +67,7 @@ public class HandlerAccount extends BaseHandler {
             Room roomG = manage.getRoom("GD" + id_guild);
             if(roomG == null){
                 // Tạo room guild + id
-                manage.initRoom("HandlerExtension", "GD" + id_guild, CmdDefine.Room.Guild, 50);
+                manage.initRoom("ZoneExtension", "GD" + id_guild, CmdDefine.Room.Guild, 50);
                 roomG = manage.getRoom("GD" + id_guild);
             }
             manage.userJoinRoom(user, roomG);
