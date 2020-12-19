@@ -151,10 +151,13 @@ public class HandlerLogin extends BaseHandler {
     private void OnUserLogout(ISFSEvent event) {
         trace("____________________________ OnUserLogout ____________________________");
 
+        User user = (User) event.getParameter(SFSEventParam.USER);
+        if(user.getName().startsWith("Guest")) return;
+
         // === Thao tác với room global
         RoomManage manage = new RoomManage(this.getParentExtension());
         Room room = manage.getRoom(CmdDefine.Room.Global);
-        User user = (User) event.getParameter(SFSEventParam.USER);
+
         manage.userOutRoom(user, room);
 
         // === Thao tác với room guild
