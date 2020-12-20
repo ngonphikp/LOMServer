@@ -5,11 +5,9 @@ import Base.CouchBase;
 import Models.M_Guild;
 import Util.C_Util;
 import Util.CmdDefine;
-import com.couchbase.client.java.document.json.JsonArray;
 import com.couchbase.client.java.document.json.JsonObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class C_Guild extends BaseControl {
 
