@@ -4,8 +4,6 @@ import Base.BaseExtension;
 import Base.BaseHandler;
 import Base.RoomManage;
 import Controls.C_Account;
-import Controls.C_Character;
-import Models.M_Character;
 import Util.CmdDefine;
 import com.smartfoxserver.v2.core.ISFSEvent;
 import com.smartfoxserver.v2.core.SFSEventParam;
@@ -49,6 +47,9 @@ public class HandlerGame extends BaseHandler {
                 break;
             case CmdDefine.CMD.SEND_SCENARIO:
                 HandleScenario(user, data);
+                break;
+            case CmdDefine.CMD.INIT_CHARS:
+                HandleInit(user, data);
                 break;
         }
     }
@@ -187,36 +188,40 @@ public class HandlerGame extends BaseHandler {
 
         listUser.add(user);
         if(extension.getParentRoom().isFull()){
-            call(user);
+            call();
         }
     }
 
-    private synchronized void call(User user) {
+    private synchronized void call() {
         if (listUser.size() > 1){
             ISFSObject packet = new SFSObject();
             packet.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
 
-            ISFSArray list = new SFSArray();
-            for (int i = 0; i < listUser.size(); i++) {
-                ISFSObject object = new SFSObject();
+            ISFSArray accounts = new SFSArray();
+            for(int i = 0; i < listUser.size(); i++){
                 int id_ac = Integer.parseInt(listUser.get(i).getName());
-                object.putSFSObject(CmdDefine.ModuleAccount.ACCOUNTS, C_Account.get(id_ac).parse());
-
-                ArrayList<M_Character> lstCharacter = C_Character.gets(id_ac);
-                ISFSArray arr = new SFSArray();
-                for(int j = 0; j < lstCharacter.size(); j++){
-                    arr.addSFSObject(lstCharacter.get(j).parse());
-                }
-                object.putSFSArray(CmdDefine.ModuleCharacter.CHARACTERS, arr);
-
-                list.addSFSObject(object);
+                accounts.addSFSObject(C_Account.get(id_ac).parse());
             }
-            packet.putSFSArray(CmdDefine.ModuleGame.LIST, list);
+            packet.putSFSArray(CmdDefine.ModuleAccount.ACCOUNTS, accounts);
 
             packet.putInt(CmdDefine.CMD_ID, CmdDefine.CMD.JOIN_ROOM_GAME);
             trace(packet.getDump());
             this.send(this.module, packet, extension.getParentRoom().getUserList());
         }
+    }
+
+    private void HandleInit(User user, ISFSObject data) {
+        trace("____________________________ HandleInit ____________________________");
+        int id_ac = Integer.parseInt(user.getName());
+        // === Đọc dữ liệu gửi lên ===
+        trace(data.getDump());
+
+        // === Thao tác database
+
+        // === Gửi dữ liệu xuống ===
+        data.putShort(CmdDefine.ERROR_CODE, CmdDefine.ErrorCode.SUCCESS);
+        data.putInt(CmdDefine.ModuleAccount.ID, id_ac);
+        this.send(this.module, data, extension.getParentRoom().getUserList());
     }
 
     @Override

@@ -56,6 +56,8 @@ public class CmdDefine {
         public static final int LOCK_ARRANGE = 8006;
         public static final int START_GAME = 8007;
         public static final int SEND_SCENARIO = 8008;
+
+        public static final int INIT_CHARS = 8009;
     }
 
     public static class ErrorCode{
@@ -185,12 +187,5 @@ public class CmdDefine {
 
         public static final String TICK_BOSS_GUILD = "tick_bg";
         public static final String TICKS_BOSS_GUILD = "ticks_bg";
-    }
-
-    public static class ModuleGame{
-        public static final String LIST = "list";
-
-        public static final String TO = "to";
-        public static final String FROM = "from";
     }
 }
